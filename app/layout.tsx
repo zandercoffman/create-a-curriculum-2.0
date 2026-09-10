@@ -12,13 +12,24 @@ export const metadata: Metadata = {
   description: "Instagram-inspired sidebar for a curriculum app",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={cn(inter.variable, "min-h-screen bg-[#fafafa] font-sans text-foreground")}>
+      <body
+        className={cn(
+          inter.variable,
+          "min-h-screen bg-[#fafafa] font-sans text-foreground"
+        )}
+      >
         <SidebarProvider className="min-h-screen">
           <AppSidebar />
-          <main className="min-h-screen flex-1 bg-[#fafafa] translate-x-[70px] flex flex-col  ">{children}</main>
+          <main className="min-h-screen flex-1 bg-[#fafafa] translate-x-[70px] flex flex-col">
+            {children}
+          </main>
         </SidebarProvider>
       </body>
     </html>

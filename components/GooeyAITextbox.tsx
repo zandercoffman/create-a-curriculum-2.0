@@ -22,40 +22,67 @@ export interface TextAIModel {
 
 export const textAIs: TextAIModel[] = [
   {
-    name: "Meta Llama 3.1 8B Instant",
-    svg: "/meta-icon.svg",
-    description: "An ultra-fast, lightweight model for quick answers and everyday tasks.",
-    id: "llama-3.1-8b-instant",
-  },
-  {
-    name: "Meta Llama 3.3 70B",
-    svg: "/meta-icon.svg",
-    description: "A powerful general-purpose model for reasoning, writing, and complex tasks.",
-    id: "llama-3.3-70b-versatile",
-  },
-  {
     name: "OpenAI GPT-OSS 120B",
     svg: "/openai.svg",
-    description: "OpenAI's flagship open-weight model with strong reasoning and coding capabilities.",
+    description:
+      "OpenAI's flagship open-weight model with strong reasoning and coding capabilities.",
     id: "openai/gpt-oss-120b",
   },
+
   {
     name: "OpenAI GPT-OSS 20B",
     svg: "/openai.svg",
-    description: "A fast and efficient open-weight model for everyday generation and reasoning.",
+    description:
+      "A fast and efficient open-weight model for everyday generation and reasoning.",
     id: "openai/gpt-oss-20b",
   },
+
   {
-    name: "Groq Compound",
-    svg: "/groq.webp",
-    description: "An AI system that combines models and built-in tools for web search and code execution.",
-    id: "groq/compound",
+    name: "Gemini 3.8 Flash",
+    svg: "/gemini.webp",
+    description:
+      "Google's most intelligent Flash model, built for complex reasoning, coding, autonomous agents, and long-horizon tasks.",
+    id: "gemini-3.8-flash",
   },
+
   {
-    name: "Groq Compound Mini",
-    svg: "/groq.webp",
-    description: "A lightweight Compound system designed for fast responses with built-in tools.",
-    id: "groq/compound-mini",
+    name: "Gemini 3.7 Flash",
+    svg: "/gemini.webp",
+    description:
+      "Google's powerful Flash model for complex coding, agentic workflows, and reliable multi-step execution.",
+    id: "gemini-3.7-flash",
+  },
+
+  {
+    name: "Gemini 3.6 Flash",
+    svg: "/gemini.webp",
+    description:
+      "A balanced Gemini Flash model designed for speed, multimodal capabilities, and general agentic tasks.",
+    id: "gemini-3.6-flash",
+  },
+
+  {
+    name: "Gemini 3.5 Flash",
+    svg: "/gemini.webp",
+    description:
+      "A capable Flash model optimized for coding, agentic execution, and high-throughput generation.",
+    id: "gemini-3.5-flash",
+  },
+
+  {
+    name: "Gemini 3.5 Flash-Lite",
+    svg: "/gemini.webp",
+    description:
+      "Google's fast, cost-effective Flash model optimized for high-throughput and low-latency tasks.",
+    id: "gemini-3.5-flash-lite",
+  },
+
+  {
+    name: "Gemini 3.1 Flash-Lite",
+    svg: "/gemini.webp",
+    description:
+      "A highly efficient Gemini model offering strong performance at a fraction of the cost of larger models.",
+    id: "gemini-3.1-flash-lite",
   },
 ]
 
@@ -298,7 +325,7 @@ export function AITextbox({
                 ease: [0.22, 1, 0.36, 1],
               }}
             >
-              <Sparkles className="size-[18px] shrink-0 text-[#dddddd]" />
+              <Sparkles className="size-[18px] shrink-0 text-[#ffffff]" />
 
               <span className="flex-1 truncate text-[17px] tracking-[-0.035em] ">
                 {placeholder}

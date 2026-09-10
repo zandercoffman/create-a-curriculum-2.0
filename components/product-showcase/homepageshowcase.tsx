@@ -9,7 +9,7 @@ type HomePageShowcaseProps = {
 
 export default function HomePageShowcase({ showcase }: HomePageShowcaseProps) {
   return (
-    <Card className="relative isolate mx-auto w-[70vw] overflow-hidden rounded-[28px] border border-white/10 bg-gradient-to-br from-background via-background to-primary/5 shadow-[0_30px_80px_rgba(15,23,42,0.18)]">
+    <Card className="relative isolate mx-auto w-1/3 overflow-hidden rounded-[55px] border border-white/10 bg-gradient-to-br from-background via-background to-primary/5 shadow-[0_30px_80px_rgba(15,23,42,0.18)]">
       <div className="absolute inset-y-0 right-0 w-[65%]">
         <div className="absolute inset-0 overflow-hidden">
           <Image

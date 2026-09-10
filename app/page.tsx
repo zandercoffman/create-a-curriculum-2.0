@@ -6,21 +6,38 @@ import { Separator } from "@/components/ui/separator"
 import { Share } from "lucide-react"
 
 import { navItems } from "@/lib/static-unchanging"
-import {Badge} from "@/components/ui/badge"
+import { Badge } from "@/components/ui/badge"
 import HomePageShowcase from "@/components/product-showcase/homepageshowcase"
 import { Showcases } from "@/lib/product-showcases"
+import { cn } from "@/lib/utils"
+import { neulis, nofex } from "@/lib/fonts"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 
 export default function Home() {
   return (
     <section className="flex mt-6 h-full w-[75vw]  mx-auto flex-col items-center justify-center">
-      <Image src="/caclogo.png" alt="Create a Curriculum" width={450} height={40} className="rounded-lg" />
-      <p className="text-center w-[60vw] mb-4 text-md text-foreground">
-        create-a-curriculum is a free AI-powered education tool that turns a topic, product, or idea into a personalized, comprehensive curriculum—helping users quickly create structured learning paths tailored to their needs.
-      </p>
-      <p className="text-center w-[60vw] mb-4 text-xs text-foreground/80">
-         create-a-curriculum is an independent creator of educational materials. All product names, logos, brands, and other trademarks featured or referred to within this curriculum are the property of their respective trademark holders. These trademark holders are not affiliated with create-a-curriculum, our products, or our website. They do not sponsor, endorse, or approve any of our materials.
-      </p>
-      <div className="flex flex-row gap-4 mb-4">
+      <section className="flex mb-4 flex-col items-center justify-center w-full">
+        <h1
+          className={cn(
+            "text-[70px] font-bold leading-none gradient-text",
+            nofex.className
+          )}
+        >
+          create-a-curriculum
+        </h1>
+
+        <p
+          className={cn(
+            "text-[18px] text-center font-light tracking-[15px] leading-none",
+            nofex.className
+          )}
+        >
+          .vercel.app
+        </p>
+      </section>
+
+      <section className="flex flex-row gap-4 mb-2">
         <section>
           <Link href="https://www.instagram.com/create.a.curriculum" target="_blank" rel="noreferrer" aria-label="Instagram">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor" className="text-foreground">
@@ -56,10 +73,108 @@ export default function Home() {
             <Share />
           </button>
         </section>
-      </div>
+      </section>
 
-      <section className="flex flex-row gap-4 w-full">
-        <HomePageShowcase showcase={Showcases[0]} />
+      <Card className="w-[70vw] bg-gradient-to-br from-[#FFF0F3] py-4 to-white border border-rose-100/60 shadow-sm transition-all duration-300  hover:shadow-md hover:shadow-rose-500/20 mt-2 mx-auto flex flex-row mb-4 rounded-3xl shadow-xl hover:shadow-2xl  ease-in-out">
+        <CardHeader className="flex flex-col gap-2 w-full">
+          <CardDescription className="text-center text-md text-foreground">
+            create-a-curriculum is a free AI-powered education tool that turns a topic, product, or idea into a personalized, comprehensive curriculum—helping users quickly create structured learning paths tailored to their needs.
+          </CardDescription>
+        </CardHeader>
+
+        <CardContent className="flex items-center">
+        </CardContent>
+      </Card>
+      <p className="text-center w-[65vw] mb-4 text-xs text-foreground/40">
+        create-a-curriculum is an independent creator of educational materials. All product names, logos, brands, and other trademarks featured or referred to within this curriculum are the property of their respective trademark holders. These trademark holders are not affiliated with create-a-curriculum, our products, or our website. They do not sponsor, endorse, or approve any of our materials.
+      </p>
+
+
+      <section className="flex flex-row gap-4 h-[35vh] w-full">
+        <Card className="overflow-hidden p-0 w-1/3 h-full rounded-[55px] border border-rose-100/60 bg-gradient-to-br from-[#FFF0F3] to-white shadow-xl transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] hover:shadow-2xl hover:shadow-rose-500/10">
+          <CardContent className="p-0 h-full w-full">
+            <video
+              src="/showcaseVideos/1.mp4"
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="w-full h-full object-cover"
+            />
+          </CardContent>
+        </Card>
+
+        <section className="flex flex-col gap-4 w-1/3">
+          <Card className="overflow-hidden p-0 h-1/2 rounded-[55px]  border border-rose-100/60 bg-gradient-to-br from-[#FFF0F3] to-white shadow-xl transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] hover:shadow-2xl hover:shadow-rose-500/10">
+
+            <CardContent className="p-0 my-auto">
+              <h1 className={cn("text-center text-md font-semibold text-foreground/80")}>
+                version 2.0
+              </h1>
+            </CardContent>
+          </Card>
+
+          <Card className="overflow-hidden p-0 h-[30vh] rounded-[55px] border border-rose-100/60 bg-gradient-to-br from-[#FFF0F3] to-white shadow-xl transition-all duration-300 gap-0 hover:-translate-y-1 hover:scale-[1.02] hover:shadow-2xl hover:shadow-rose-500/10">
+            <CardHeader className="h-[15%] flex items-center justify-center pt-6">
+              <h2 className={cn("text-center text-md font-semibold text-foreground/80", nofex.className)}>
+                Create a curriculum with:
+              </h2>
+            </CardHeader>
+
+            <CardContent className="p-0 mx-auto w-full my-auto px-6">
+              <ScrollArea className="w-full whitespace-nowrap">
+                <div className="flex flex-row gap-[10px] items-center py-2">
+                  <section className="flex shrink-0 flex-col items-center gap-2">
+                    <img
+                      src="/AppIcons/muse.webp"
+                      alt="Muse"
+                      className="size-[clamp(44px,4.5vw,64px)] rounded-4xl border"
+                    />
+                    <h1 className="text-[clamp(12px,1vw,10px)]">Muse</h1>
+                  </section>
+
+                  <section className="flex shrink-0 flex-col items-center gap-2">
+                    <img
+                      src="/AppIcons/gemini.webp"
+                      alt="Gemini"
+                      className="size-[clamp(44px,4.5vw,64px)] rounded-4xl border"
+                    />
+                    <h1 className="text-[clamp(12px,1vw,10px)]">Gemini</h1>
+                  </section>
+
+                  <section className="flex shrink-0 flex-col items-center gap-2">
+                    <img
+                      src="/AppIcons/chatgpt.webp"
+                      alt="ChatGPT"
+                      className="size-[clamp(44px,4.5vw,64px)] rounded-4xl border"
+                    />
+                    <h1 className="text-[clamp(12px,1vw,10px)]">ChatGPT</h1>
+                  </section>
+
+                  <section className="flex shrink-0 flex-col items-center gap-2">
+                    <img
+                      src="/AppIcons/metaai.webp"
+                      alt="Meta AI"
+                      className="size-[clamp(44px,4.5vw,64px)] rounded-4xl border"
+                    />
+                    <h1 className="text-[clamp(12px,1vw,10px)]">Meta AI</h1>
+                  </section>
+
+                  <section className="flex shrink-0 flex-col items-center gap-2">
+                    <img
+                      src="/AppIcons/claude.webp"
+                      alt="Claude"
+                      className="size-[clamp(44px,4.5vw,64px)] rounded-4xl border"
+                    />
+                    <h1 className="text-[clamp(12px,1vw,10px)]">Claude</h1>
+                  </section>
+                </div>
+
+              </ScrollArea>
+            </CardContent>
+          </Card>
+        </section>
+
         <HomePageShowcase showcase={Showcases[1]} />
       </section>
 
