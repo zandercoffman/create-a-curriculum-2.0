@@ -1,8 +1,15 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
+@plugin "@tailwindcss/typography";
+
+
 
 @custom-variant dark (&:is(.dark *));
+
+body {
+  position: relative;
+}
 
 @theme inline {
   --color-background: var(--background);
@@ -135,14 +142,25 @@
     cursor: pointer;
   }
 }
+
 .gradient-text {
-  background: linear-gradient(
-    45deg,
-    #ff6b6b,
-    #ff9a9e,
-    #f06595,
-    #ff6b6b
-  );
+  background: linear-gradient(45deg,
+      #ff6b6b,
+      #ff9a9e,
+      #f06595,
+      #ff6b6b);
+  background-size: 300% 300%;
+
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  animation: gradientShift 20s ease infinite;
+}
+
+.gradient-muse {
+  background: #0866ff;
   background-size: 300% 300%;
 
   color: transparent;

@@ -9,7 +9,7 @@ import AITextbox, {
 
 import { GooeySearch } from "@/components/GooeySearch"
 import { Button } from "@/components/ui/button"
-import { GalleryHorizontalEnd, Images, Image, X, Download, ExternalLink, CircleUserRound, Trash, Trash2, Upload } from "lucide-react"
+import { GalleryHorizontalEnd, Images, Image, X, Download, ExternalLink, CircleUserRound, Trash, Trash2, Upload, ScrollText, HatGlasses } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { AnimatePresence, motion } from "framer-motion"
 import { CurriculumPDF } from "@/components/curriculumPDF"
@@ -45,6 +45,9 @@ import {
     CarouselNext,
     CarouselPrevious,
 } from "@/components/ui/carousel"
+import { Switch } from "@/components/ui/switch"
+import { cn } from "@/lib/utils"
+import { nofex } from "@/lib/fonts"
 
 const searchData = [
     "Fractions",
@@ -287,8 +290,12 @@ export default function CurriculumsPage() {
     return (
         <main className="w-[90%] px-20 overflow-x-hidden pt-20 relative min-h-screen overflow-hidden text-slate-950">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.45),transparent_42%)]" />
-
+            <section className="mx-auto mb-4 flex flex-row gap-2 items-center justify-center">
+                <ScrollText className="text-[#f06565]" size={55} />
+                <h1 className={cn(nofex.className, "text-5xl font-bold text-center text-[#f06565]")}>Curriculums</h1>
+            </section>
             <section className="relative flex items-center justify-center flex-row w-[80%] gap-6">
+
                 <section className="relative flex w-min items-center justify-center gap-6 ml-[15vw] ">
                     <section className="flex shrink-0 flex-row items-center justify-end gap-2">
                         {/* Images */}
@@ -645,21 +652,12 @@ export default function CurriculumsPage() {
 
 
 
-            {!isLoading && <Card className="w-[80%] bg-gradient-to-br from-[#FFF0F3] py-4 to-white border border-rose-100/60 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:shadow-rose-500/10 mt-6 mx-auto flex flex-row mb-4 rounded-3xl shadow-xl hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 ease-in-out">
-                <CardHeader className="flex flex-col gap-2 w-full">
-                    <CardTitle>Check out pre-made curriculum and other resources!</CardTitle>
-                    <CardDescription>Explore our collection of pre-made curricula and additional learning materials.</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <Button className="bg-rose-500 cursor-pointer! mx-auto my-auto rounded-full px-5  hover:bg-rose-600 text-white">
-                        Explore Resources
-                    </Button>
-                </CardContent>
-            </Card>}
+
+
 
 
             {
-                isLoading && <Table className="w-[80vw] mx-auto mb-4 mt-12 ">
+                isLoading && <Table className="w-[80vw] mx-auto mb-4 mt-12 overflow-x-hidden ">
                     <TableHeader>
                         <TableRow>
                             <TableHead className="text-card-foreground/50 flex flex-row items-center">Curriculum In Progress {chosenAIModel && <img src={`${chosenAIModel.svg}`} alt="AI Model" className="size-6 ml-2 rounded-full" />}</TableHead>
@@ -732,11 +730,55 @@ export default function CurriculumsPage() {
                 </Card>
             )}
 
-            <Table className="w-[80vw] mx-auto  mb-10">
-                <TableCaption>A list of your recent created curriculums.</TableCaption>
+            <Table className="w-[80vw] mx-auto overflow-x-hidden  mb-10">
                 <TableHeader>
                     <TableRow>
                         <TableHead className="text-card-foreground/50">Created Curriculum ({allCurriculums.length})</TableHead>
+                        <TableHead className="text-card-foreground/50">Export</TableHead>
+                        <TableHead className="text-card-foreground/50">Delete</TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody className="overflow-x-hidden">
+                    {
+                        allCurriculums.map((curriculum, index) => (
+                            <TableRow key={index} className=" transition-all duration-300 ease-in-out justify-center items-center">
+                                <TableCell className="flex flex-row w-full  my-auto items-center justify-start underline text-blue-800 hover:cursor-pointer">
+                                    <LinkPreview
+                                        url={testLink + "curriculums/" + (index + 1)}
+                                        className="text-blue-800 hover:text-blue-600 hover:cursor-pointer"
+                                    >
+                                        {curriculum.name}
+                                    </LinkPreview>
+
+                                </TableCell>
+
+                                <TableCell className=" w-[15%] *:hover:bg-card/50 *:mx-2 ">
+                                    <Link href={`/curriculums/${index + 1}`}>Preview</Link>
+                                    <Button variant={"ghost"} size="icon-sm">
+                                        <PDFDownloadLink document={<CurriculumPDF name={curriculum.name} curriculum={curriculum.curriculum} />} fileName={`${curriculum.name}.pdf`}>
+                                            PDF
+                                        </PDFDownloadLink>
+                                    </Button>
+                                    <CurriculumDOCXDownload name={curriculum.name} curriculum={curriculum.curriculum} />
+
+                                </TableCell>
+
+                                <TableCell className="w-min ">
+                                    <Button variant={"ghost"} className="mx-auto" size="icon-sm">
+                                        <Trash2 onClick={() => trashCurriculum(index)} />
+                                    </Button>
+                                </TableCell>
+                            </TableRow>
+                        ))
+                    }
+
+                </TableBody>
+            </Table>
+
+            <Table className="w-[80vw] mx-auto  mb-10">
+                <TableHeader>
+                    <TableRow>
+                        <TableHead className="text-card-foreground/50">Agent-Made Curriculums ({allCurriculums.length})</TableHead>
                         <TableHead className="text-card-foreground/50">Export</TableHead>
                         <TableHead className="text-card-foreground/50">Delete</TableHead>
                     </TableRow>
@@ -777,6 +819,86 @@ export default function CurriculumsPage() {
 
                 </TableBody>
             </Table>
+
+            <Card className="w-[90%] mt-6 bg-gradient-to-br from-[#FFF0F3] py-4 to-white border border-rose-100/60 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:shadow-rose-500/10 mx-auto flex flex-row mb-4 rounded-3xl shadow-xl hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 ease-in-out">
+                <CardHeader className="flex flex-col gap-2 w-full">
+                    <CardTitle className="relative flex flex-row gap-2 text-lg items-center align-middle">
+                        Use an AI agent to make curriculums and do research for you.
+                        <Badge className="bg-red-600 text-xs font-bold">
+                            NEW!
+                        </Badge>
+                    </CardTitle>
+                    <CardDescription className="space-y-4">
+                        <p>
+                            AI Agents can create curriculums for you based on your instructions,
+                            researching and organizing information on your behalf.
+                        </p>
+
+                        <div>
+                            <p className="mb-2 text-sm font-medium text-foreground">
+                                AI Agents can:
+                            </p>
+
+                            <ul className="list-none space-y-2 text-xs text-foreground/70">
+                                <li>
+                                    🔎{" "}
+                                    <span className="font-medium text-foreground/80">
+                                        Research the web for you
+                                    </span>{" "}
+                                    — Find products, resources, activities, and information from
+                                    retailers like Walmart, Amazon, Target, Best Buy, and more.
+                                </li>
+
+                                <li>
+                                    📝{" "}
+                                    <span className="font-medium text-foreground/80">
+                                        Follow your instructions
+                                    </span>{" "}
+                                    — Use your goals, preferences, budget, and requirements to
+                                    guide the research.
+                                </li>
+
+                                <li>
+                                    📚{" "}
+                                    <span className="font-medium text-foreground/80">
+                                        Build a complete curriculum
+                                    </span>{" "}
+                                    — Turn the information it finds into detailed lessons,
+                                    activities, resources, and learning plans.
+                                </li>
+
+                                <li>
+                                    ⚡{" "}
+                                    <span className="font-medium text-foreground/80">
+                                        Handle the busywork
+                                    </span>{" "}
+                                    — Take care of the searching, organizing, and planning so you
+                                    can spend less time doing research yourself.
+                                </li>
+                            </ul>
+                        </div>
+
+                        <p className="text-xs text-foreground/60">
+                            <span className="font-medium text-foreground/80">
+                                Just tell the agent what you need.
+                            </span>{" "}
+                            It will take care of the research and curriculum creation.
+                        </p>
+                    </CardDescription>
+
+                </CardHeader>
+                <CardContent>
+                    <Link
+                        href="/agents"
+                        className="bg-rose-500 flex flex-row w-max my-auto mx-auto z-[10] hover:bg-rose-600 text-white rounded-full px-5 py-2.5 inline-flex items-center justify-center cursor-pointer"
+                    >
+                       <HatGlasses className="mr-2" /> Start Using Agents
+                    </Link>
+
+                </CardContent>
+            </Card>
+
+            
         </main>
     )
 }

@@ -13,7 +13,7 @@ export function AppSidebar() {
         <aside className="group/sidebar fixed inset-y-0 left-0 z-40 flex h-screen w-[70px] flex-col overflow-hidden border-r border-border/80 bg-background/95 backdrop-blur-md transition-[width] duration-200 ease-out hover:w-[260px]">
             {/* Logo */}
             <div className="flex items-center gap-3 px-4 py-5">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-border/80 bg-gradient-to-br from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] p-1 shadow-sm">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-border/80 bg-gradient-to-br from-[#f9ce34] via-[#ee2a7b] to-[#d7287d] p-1 shadow-sm">
                     <Image
                         src="/cacicon.png"
                         alt="Create a Curriculum"
