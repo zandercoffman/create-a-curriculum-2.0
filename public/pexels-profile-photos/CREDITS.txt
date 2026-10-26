@@ -1,0 +1,94 @@
+Pexels profile photos - source list
+License: Pexels License - all photos free to download and use, attribution not required but appreciated.
+Do not sell unaltered copies, do not redistribute on other stock/wallpaper platforms, do not imply endorsement.
+
+01-dog (dog): Pexels photo ID 14714241
+  Image: https://images.pexels.com/photos/14714241/pexels-photo-14714241.jpeg?auto=compress&cs=tinysrgb&w=800
+  Search: https://www.pexels.com/search/dog/
+02-cat (cat): Pexels photo ID 39616607
+  Image: https://images.pexels.com/photos/39616607/pexels-photo-39616607.jpeg?auto=compress&cs=tinysrgb&w=800
+  Search: https://www.pexels.com/search/cat/
+03-butterfly (butterfly): Pexels photo ID 35141455
+  Image: https://images.pexels.com/photos/35141455/pexels-photo-35141455.jpeg?auto=compress&cs=tinysrgb&w=800
+  Search: https://www.pexels.com/search/butterfly/
+04-ladybug (ladybug): Pexels photo ID 32663302
+  Image: https://images.pexels.com/photos/32663302/pexels-photo-32663302.jpeg?auto=compress&cs=tinysrgb&w=800
+  Search: https://www.pexels.com/search/ladybug/
+05-bee (bee): Pexels photo ID 39665142
+  Image: https://images.pexels.com/photos/39665142/pexels-photo-39665142.jpeg?auto=compress&cs=tinysrgb&w=800
+  Search: https://www.pexels.com/search/bee/
+06-hummingbird (hummingbird): Pexels photo ID 27843488
+  Image: https://images.pexels.com/photos/27843488/pexels-photo-27843488.jpeg?auto=compress&cs=tinysrgb&w=800
+  Search: https://www.pexels.com/search/hummingbird/
+07-rabbit (rabbit): Pexels photo ID 7212716
+  Image: https://images.pexels.com/photos/7212716/pexels-photo-7212716.jpeg?auto=compress&cs=tinysrgb&w=800
+  Search: https://www.pexels.com/search/rabbit/
+08-hamster (hamster): Pexels photo ID 5241293
+  Image: https://images.pexels.com/photos/5241293/pexels-photo-5241293.jpeg?auto=compress&cs=tinysrgb&w=800
+  Search: https://www.pexels.com/search/hamster/
+09-turtle (turtle): Pexels photo ID 7765015
+  Image: https://images.pexels.com/photos/7765015/pexels-photo-7765015.jpeg?auto=compress&cs=tinysrgb&w=800
+  Search: https://www.pexels.com/search/turtle/
+10-frog (frog): Pexels photo ID 23716149
+  Image: https://images.pexels.com/photos/23716149/pexels-photo-23716149.jpeg?auto=compress&cs=tinysrgb&w=800
+  Search: https://www.pexels.com/search/frog/
+11-fox (fox): Pexels photo ID 9681760
+  Image: https://images.pexels.com/photos/9681760/pexels-photo-9681760.jpeg?auto=compress&cs=tinysrgb&w=800
+  Search: https://www.pexels.com/search/fox/
+12-red-panda (red panda): Pexels photo ID 30395789
+  Image: https://images.pexels.com/photos/30395789/pexels-photo-30395789.jpeg?auto=compress&cs=tinysrgb&w=800
+  Search: https://www.pexels.com/search/red%20panda/
+13-penguin (penguin): Pexels photo ID 20413999
+  Image: https://images.pexels.com/photos/20413999/pexels-photo-20413999.jpeg?auto=compress&cs=tinysrgb&w=800
+  Search: https://www.pexels.com/search/penguin/
+14-owl (owl): Pexels photo ID 37150856
+  Image: https://images.pexels.com/photos/37150856/pexels-photo-37150856.jpeg?auto=compress&cs=tinysrgb&w=800
+  Search: https://www.pexels.com/search/owl/
+15-koala (koala): Pexels photo ID 18457183
+  Image: https://images.pexels.com/photos/18457183/pexels-photo-18457183.jpeg?auto=compress&cs=tinysrgb&w=800
+  Search: https://www.pexels.com/search/koala/
+16-deer (deer): Pexels photo ID 33287267
+  Image: https://images.pexels.com/photos/33287267/pexels-photo-33287267.jpeg?auto=compress&cs=tinysrgb&w=800
+  Search: https://www.pexels.com/search/deer/
+17-horse (horse): Pexels photo ID 9681676
+  Image: https://images.pexels.com/photos/9681676/pexels-photo-9681676.jpeg?auto=compress&cs=tinysrgb&w=800
+  Search: https://www.pexels.com/search/horse/
+18-goldfish (goldfish): Pexels photo ID 34961941
+  Image: https://images.pexels.com/photos/34961941/pexels-photo-34961941.jpeg?auto=compress&cs=tinysrgb&w=800
+  Search: https://www.pexels.com/search/goldfish/
+19-chameleon (chameleon): Pexels photo ID 32486966
+  Image: https://images.pexels.com/photos/32486966/pexels-photo-32486966.jpeg?auto=compress&cs=tinysrgb&w=800
+  Search: https://www.pexels.com/search/chameleon/
+20-monkey (monkey): Pexels photo ID 32196368
+  Image: https://images.pexels.com/photos/32196368/pexels-photo-32196368.jpeg?auto=compress&cs=tinysrgb&w=800
+  Search: https://www.pexels.com/search/monkey/
+21-lion (lion): Pexels photo ID 11153559
+  Image: https://images.pexels.com/photos/11153559/pexels-photo-11153559.jpeg?auto=compress&cs=tinysrgb&w=800
+  Search: https://www.pexels.com/search/lion/
+22-tiger (tiger): Pexels photo ID 17980077
+  Image: https://images.pexels.com/photos/17980077/pexels-photo-17980077.jpeg?auto=compress&cs=tinysrgb&w=800
+  Search: https://www.pexels.com/search/tiger/
+23-elephant (elephant): Pexels photo ID 11870159
+  Image: https://images.pexels.com/photos/11870159/pexels-photo-11870159.jpeg?auto=compress&cs=tinysrgb&w=800
+  Search: https://www.pexels.com/search/elephant/
+24-giraffe (giraffe): Pexels photo ID 31794126
+  Image: https://images.pexels.com/photos/31794126/pexels-photo-31794126.jpeg?auto=compress&cs=tinysrgb&w=800
+  Search: https://www.pexels.com/search/giraffe/
+25-dolphin (dolphin): Pexels photo ID 30405211
+  Image: https://images.pexels.com/photos/30405211/pexels-photo-30405211.jpeg?auto=compress&cs=tinysrgb&w=800
+  Search: https://www.pexels.com/search/dolphin/
+26-jellyfish (jellyfish): Pexels photo ID 5506802
+  Image: https://images.pexels.com/photos/5506802/pexels-photo-5506802.jpeg?auto=compress&cs=tinysrgb&w=800
+  Search: https://www.pexels.com/search/jellyfish/
+27-snail (snail): Pexels photo ID 31764068
+  Image: https://images.pexels.com/photos/31764068/pexels-photo-31764068.jpeg?auto=compress&cs=tinysrgb&w=800
+  Search: https://www.pexels.com/search/snail/
+28-hedgehog (hedgehog): Pexels photo ID 36483715
+  Image: https://images.pexels.com/photos/36483715/pexels-photo-36483715.jpeg?auto=compress&cs=tinysrgb&w=800
+  Search: https://www.pexels.com/search/hedgehog/
+29-squirrel (squirrel): Pexels photo ID 36785106
+  Image: https://images.pexels.com/photos/36785106/pexels-photo-36785106.jpeg?auto=compress&cs=tinysrgb&w=800
+  Search: https://www.pexels.com/search/squirrel/
+30-duck (duck): Pexels photo ID 36732837
+  Image: https://images.pexels.com/photos/36732837/pexels-photo-36732837.jpeg?auto=compress&cs=tinysrgb&w=800
+  Search: https://www.pexels.com/search/duck/

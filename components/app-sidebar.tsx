@@ -1,16 +1,39 @@
 "use client"
 
+import { useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
 import { navItems } from "@/lib/static-unchanging"
+import { Button } from "./ui/button"
+import {useDarkMode} from "@/lib/useDarkMode"
+import {
+    ChevronLeft,
+    ChevronRight,
+    MessageCircle,
+    Moon,
+    Scale,
+    Settings,
+    Sun,
+} from "lucide-react"
 
 export function AppSidebar() {
     const pathname = usePathname()
+    const [hovered, setHovered] = useState(false)
+    const [pinned, setPinned] = useState(false)
+    const open = hovered || pinned
+
+    const { isDark, toggleDarkMode } = useDarkMode()
 
     return (
-        <aside className="group/sidebar fixed inset-y-0 left-0 z-40 flex h-screen w-[70px] flex-col overflow-hidden border-r border-border/80 bg-background/95 backdrop-blur-md transition-[width] duration-200 ease-out hover:w-[260px]">
+        <aside
+            onMouseEnter={() => setHovered(true)}
+            onMouseLeave={() => setHovered(false)}
+            className={`fixed inset-y-0 left-0 z-40 flex h-screen flex-col overflow-hidden border-r border-border/80 bg-background/95 backdrop-blur-md transition-[width] duration-200 ease-out ${
+                open ? "w-72" : "w-[70px]"
+            }`}
+        >
             {/* Logo */}
             <div className="flex items-center gap-3 px-4 py-5">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-border/80 bg-gradient-to-br from-[#f9ce34] via-[#ee2a7b] to-[#d7287d] p-1 shadow-sm">
@@ -24,7 +47,13 @@ export function AppSidebar() {
                 </div>
 
                 <div className="overflow-hidden whitespace-nowrap">
-                    <div className="flex translate-x-[-12px] flex-col leading-none opacity-0 transition-all duration-200 group-hover/sidebar:translate-x-0 group-hover/sidebar:opacity-100">
+                    <div
+                        className={`flex flex-col leading-none transition-all duration-200 ${
+                            open
+                                ? "translate-x-0 opacity-100"
+                                : "translate-x-[-12px] opacity-0"
+                        }`}
+                    >
                         <span
                             className="mt-1 text-lg font-semibold"
                             style={{
@@ -47,9 +76,9 @@ export function AppSidebar() {
             </div>
 
             {/* Navigation */}
-            <nav className="mt-3 flex flex-1 flex-col gap-4 px-2">
+            <nav className="mt-3 flex flex-1 flex-col gap-4 overflow-y-auto px-2">
                 {navItems.map((section) => {
-                    {/* Standalone links such as Home */ }
+                    {/* Standalone links such as Home */}
                     if ("href" in section) {
                         const isActive =
                             pathname === section.href ||
@@ -62,14 +91,19 @@ export function AppSidebar() {
                             <Link
                                 key={section.label}
                                 href={section.href || "/"}
-                                className={`group relative flex h-6 w-full items-center gap-3 overflow-hidden rounded-xl px-3 text-left transition-colors duration-200 ${isActive
+                                className={`group relative flex h-6 w-full items-center gap-3 overflow-hidden rounded-xl px-3 text-left transition-colors duration-200 ${
+                                    isActive
                                         ? "bg-accent text-foreground"
                                         : "text-foreground/80 hover:bg-accent/60"
-                                    }`}
+                                }`}
                             >
                                 <Icon className="ml-1 h-6 w-6 shrink-0" />
 
-                                <span className="overflow-hidden whitespace-nowrap text-[15px] font-medium opacity-0 transition-all duration-200 group-hover/sidebar:opacity-100">
+                                <span
+                                    className={`overflow-hidden whitespace-nowrap text-[15px] font-medium transition-all duration-200 ${
+                                        open ? "opacity-100" : "opacity-0"
+                                    }`}
+                                >
                                     {section.label}
                                 </span>
                             </Link>
@@ -79,12 +113,15 @@ export function AppSidebar() {
                     const GroupIcon = section.icon
 
                     return (
-                        <div
-                            key={section.label}
-                            className="flex flex-col gap-1"
-                        >
+                        <div key={section.label} className="flex flex-col gap-1">
                             {/* Category heading */}
-                            <div className="flex h-0 items-center gap-3 overflow-hidden px-3 opacity-0 transition-all duration-200 group-hover/sidebar:h-6 group-hover/sidebar:opacity-100">
+                            <div
+                                className={`flex items-center gap-3 overflow-hidden px-3 transition-all duration-200 ${
+                                    open
+                                        ? "h-6 opacity-100"
+                                        : "h-0 opacity-0"
+                                }`}
+                            >
                                 <GroupIcon className="ml-1 size-4 shrink-0 text-foreground/50" />
 
                                 <span className="whitespace-nowrap text-xs font-semibold uppercase tracking-wider text-foreground/30">
@@ -105,21 +142,20 @@ export function AppSidebar() {
                                         <Link
                                             key={item.label}
                                             href={item.href}
-                                            className={`group relative flex h-10 w-full items-center gap-3 overflow-hidden rounded-xl px-3 text-left transition-colors duration-200 ${isActive
+                                            className={`group relative flex h-10 w-full items-center gap-3 overflow-hidden rounded-xl px-3 text-left transition-colors duration-200 ${
+                                                isActive
                                                     ? "bg-accent text-foreground"
                                                     : "text-foreground/70 hover:bg-accent/60 hover:text-foreground"
-                                                }`}
+                                            }`}
                                         >
                                             <Icon className="ml-1 h-5 w-5 shrink-0" />
 
                                             <span
-                                                className="
-                                                    overflow-hidden whitespace-nowrap
-                                                    text-[15px] font-medium
-                                                    opacity-0
-                                                    transition-all duration-200
-                                                    group-hover/sidebar:opacity-100
-                                                "
+                                                className={`overflow-hidden whitespace-nowrap text-[15px] font-medium transition-all duration-200 ${
+                                                    open
+                                                        ? "opacity-100"
+                                                        : "opacity-0"
+                                                }`}
                                             >
                                                 {item.label}
                                             </span>
@@ -150,11 +186,86 @@ export function AppSidebar() {
                         />
                     </svg>
 
-                    <span className="overflow-hidden whitespace-nowrap text-[15px] font-medium opacity-0 transition-all duration-200 group-hover/sidebar:opacity-100">
+                    <span
+                        className={`overflow-hidden whitespace-nowrap text-[15px] font-medium transition-all duration-200 ${
+                            open ? "opacity-100" : "opacity-0"
+                        }`}
+                    >
                         flashcardit.vercel.app
                     </span>
                 </Link>
             </nav>
+
+            {/* Bottom section, pinned to the bottom */}
+            <div className="shrink-0 px-2 pb-3 pt-2">
+                {/* Theme / Settings / Legal */}
+                <div
+                    className={`flex w-full flex-row items-center justify-center overflow-hidden whitespace-nowrap transition-all duration-200 ${
+                        open ? "opacity-100" : "opacity-0"
+                    }`}
+                >
+                    <Button
+                        variant="ghost"
+                        onClick={toggleDarkMode}
+                        className="h-12 flex-1 flex-col items-center justify-center gap-1 px-2 rounded-full text-xs"
+                        title="Toggle theme"
+                        aria-label="Toggle theme"
+                    >
+                        {
+                            !isDark ? (
+                                <Moon className="size-4" />
+                            ): (
+                                <Sun className="size-4" />
+                            )
+                        }
+                        
+                        <span>
+                            {!isDark ? "Dark" : "Light"} Mode
+                        </span>
+                    </Button>
+                    <Button
+                        variant="ghost"
+                        className="h-12 flex-1 flex-col items-center justify-center gap-1 px-2 rounded-full text-xs"
+                        title="Settings"
+                        aria-label="Settings"
+                    >
+                        <Settings className="size-4" />
+                        <span>Settings</span>
+                    </Button>
+                    <Button
+                        variant="ghost"
+                        className="h-12 flex-1 flex-col items-center justify-center gap-1 px-2 rounded-full text-xs"
+                        title="Privacy policy and legal"
+                        aria-label="Privacy policy and legal"
+                    >
+                        <a
+                            href="/privacy"
+                            className="flex flex-col items-center justify-center gap-1"
+                        >
+                            <Scale className="size-4" />
+                            <span>Information</span>
+                        </a>
+                    </Button>
+                </div>
+
+                {/* Beta / Feedback */}
+                <div
+                    className={`mt-2 flex items-center justify-between px-3 pb-1 text-xs text-muted-foreground transition-all duration-200 ${
+                        open ? "opacity-100" : "opacity-0"
+                    }`}
+                >
+                    <span>create-a-curriculum</span>
+                    <Link
+                        href="/feedback"
+                        className="flex items-center gap-1 hover:text-foreground"
+                    >
+                        <MessageCircle className="size-3.5" />
+                        Feedback
+                    </Link>
+                </div>
+
+               
+            </div>
         </aside>
     )
 }

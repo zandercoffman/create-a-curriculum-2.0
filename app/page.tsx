@@ -13,10 +13,18 @@ import { cn } from "@/lib/utils"
 import { neulis, nofex } from "@/lib/fonts"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
+import { AbsoluteColorGradient, ColorGradient } from "@/components/NameGradient"
+import {useDarkMode} from "@/lib/useDarkMode"
 
 export default function Home() {
+
+  const { isDark, toggleDarkMode } = useDarkMode()
   return (
     <section className="flex mt-6 h-full w-[75vw]  mx-auto flex-col items-center justify-center">
+      <section className="absolute top-0 w-screen h-[95vh] -z-10">
+        <div className="absolute z-1 w-[80%] h-[90%] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 dark:bg-black light:bg-[#ffffff] blur-3xl opacity-[90%] rounded-[60px]"></div>
+        <ColorGradient color={isDark ? "#000000" : "#808080"} />
+      </section>
       <section className="flex mb-4 flex-col items-center justify-center w-full">
         <h1
           className={cn(
@@ -29,7 +37,7 @@ export default function Home() {
 
         <p
           className={cn(
-            "text-[18px] text-center font-light tracking-[15px] leading-none",
+            "text-[18px] dark:text-black text-center font-light tracking-[15px] leading-none",
             nofex.className
           )}
         >
@@ -75,9 +83,9 @@ export default function Home() {
         </section>
       </section>
 
-      <Card className="w-[70vw] bg-gradient-to-br from-[#FFF0F3] py-4 to-white border border-rose-100/60 shadow-sm transition-all duration-300  hover:shadow-md hover:shadow-rose-500/20 mt-2 mx-auto flex flex-row mb-4 rounded-3xl shadow-xl hover:shadow-2xl  ease-in-out">
+      <Card className="w-[70vw] dark:bg-[#914e4e] light:bg-gradient-to-br light:from-[#FFF0F3] py-4 to-white border border-rose-100/60 shadow-sm transition-all duration-300  hover:shadow-md hover:shadow-rose-500/20 mt-2 mx-auto flex flex-row mb-4 rounded-3xl shadow-xl hover:shadow-2xl  ease-in-out">
         <CardHeader className="flex flex-col gap-2 w-full">
-          <CardDescription className="text-center text-md text-foreground">
+          <CardDescription className="text-center text-md dark:text-white light:text-foreground">
             create-a-curriculum is a free AI-powered education tool that turns a topic, product, or idea into a personalized, comprehensive curriculum—helping users quickly create structured learning paths tailored to their needs.
           </CardDescription>
         </CardHeader>
@@ -85,7 +93,7 @@ export default function Home() {
         <CardContent className="flex items-center">
         </CardContent>
       </Card>
-      <p className="text-center w-[65vw] mb-4 text-xs text-foreground/40">
+      <p className="text-center w-[65vw] mb-4 text-xs dark:text-black light:text-foreground/40">
         create-a-curriculum is an independent creator of educational materials. All product names, logos, brands, and other trademarks featured or referred to within this curriculum are the property of their respective trademark holders. These trademark holders are not affiliated with create-a-curriculum, our products, or our website. They do not sponsor, endorse, or approve any of our materials.
       </p>
 

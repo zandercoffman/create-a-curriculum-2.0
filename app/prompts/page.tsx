@@ -193,10 +193,7 @@ export default function PromptsPage() {
             </CardTitle>
 
             <CardDescription className="w-full text-xs text-foreground/80">
-              AI can be a powerful resource for brainstorming, learning, and
-              getting unstuck—but your own thinking, creativity, and authentic
-              voice matter. Use AI to support your learning, not replace it.
-              The most meaningful work is still genuinely yours.
+              Use AI to support your learning, not replace it — your thinking and voice still matter most.
             </CardDescription>
           </CardHeader>
 
@@ -375,7 +372,7 @@ export default function PromptsPage() {
                           size="sm"
                           className="rounded-full bg-rose-500 px-5 text-white hover:bg-rose-600"
                         >
-                          Go
+                          Customize
                         </Button>
                       </Link>
                     </CardContent>

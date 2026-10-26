@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, Search,  Repeat, MessageCircle, MessageSquareQuote, Lightbulb, SquareCheck, Toolbox, Layers2, BookOpenText, Brain, PersonStanding, ShoppingCartPlus, Bell } from "lucide-react";
+import { ArrowLeft, Search,  Repeat, MessageCircle, MessageSquareQuote, Lightbulb, SquareCheck, Toolbox, Layers2, BookOpenText, Brain, PersonStanding, ShoppingCartPlus, Bell, FileText } from "lucide-react";
 
 import {
     Breadcrumb,
@@ -66,6 +66,13 @@ const overviewSections: TutorialSection[] = [
         title: "Create a Reminder",
         description: "Set a reminder with the Muse agent.",
         icon: <Bell size={20} strokeWidth={2} />,
+        component: CreateCurriculumPage,
+    },
+    {
+        id: "create-resource",
+        title: "Create a Resource",
+        description: "Create a resource with the Muse agent.",
+        icon: <FileText size={20} strokeWidth={2} />,
         component: CreateCurriculumPage,
     },
     {
@@ -182,7 +189,7 @@ function SectionMenu({
                                 tooltip={section.description}
                                 onClick={() => onSelect(section.id)}
                             >
-                                <span className="flex-shrink-0 text-gray-500 scale-90">{section.icon}</span>
+                                <span className="flex-shrink-0 text-blue-500 scale-90">{section.icon}</span>
                                 <span>{section.title}</span>
                             </SidebarMenuButton>
                         </SidebarMenuItem>

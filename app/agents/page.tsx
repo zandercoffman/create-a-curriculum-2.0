@@ -25,28 +25,36 @@ import {
 } from "@/components/ui/collapsible"
 import Link from "next/link";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { ColorGradient } from "@/components/NameGradient";
 
 export default function AgentsPage() {
   return (
-    <main className="relative z-0 flex min-h-[95vh] w-[90%] flex-col gap-4 overflow-hidden px-10 pl-12 pt-14 text-slate-950">
+    <main className="relative z-0  flex min-h-[95vh] w-[90%] flex-col gap-4 overflow-hidden px-10 pl-12 pt-14 text-slate-950">
 
       {/* ── Hero ─────────────────────────────────────────── */}
-      <section className="relative overflow-hidden rounded-[35px] bg-gradient-to-br from-[#ffb2b2] via-[#fe2b72] to-[#ff0c0c] px-8 py-10 text-white md:px-12">
+      <section className="relative overflow-hidden rounded-[35px] h-[30vh] bg-black/50 text-white">
+
+        <ColorGradient color="#F06565" />
+
+
         {/* Background decoration */}
+        <div className="absolute inset-0 flex flex-col gap-4  px-8 py-10  md:px-12">
 
+          <section className="flex flex-col gap-2">
+            <h1 className={cn("flex flex-wrap items-center gap-3 text-5xl font-semibold text-white", nofex.className)}>
+              <HatGlasses className="size-10" />  Agents
+            </h1>
 
-        <div className="relative flex flex-col gap-4">
-
-          <h1 className={cn("flex flex-wrap items-center gap-3 text-5xl font-semibold text-white", nofex.className)}>
-            <HatGlasses className="size-10" />  Agents
-          </h1>
-
-          <p className="max-w-2xl text-sm leading-6 text-white/70">
-            AI systems that take a goal, break it into steps, research information,
-            use tools, and complete tasks with significantly less manual work. They
-            can help you research products, compare resources, build curriculums,
-            and more.
-          </p>
+            <section className="relative">
+              <div className="absolute w-full max-w-2xl h-[10vh] bottom-0 left-0 right-0 bg-[#FFFFFF] opacity-[25%] blur-2xl"></div>
+              <p className="max-w-2xl text-sm leading-6 text-[#FFFFFF]">
+                AI systems that take a goal, break it into steps, research information,
+                use tools, and complete tasks with significantly less manual work. They
+                can help you research products, compare resources, build curriculums,
+                and more.
+              </p>
+            </section>
+          </section>
 
           {
             /**
@@ -67,6 +75,10 @@ export default function AgentsPage() {
              */
           }
         </div>
+
+
+
+
       </section>
 
       {/* ── Disclaimer ───────────────────────────────────── */}
@@ -92,7 +104,7 @@ export default function AgentsPage() {
             Quick Shortcuts
           </p>
 
-          <ScrollArea className="w-full whitespace-nowrap">
+          <ScrollArea className="w-full whitespace-nowrap pb-2">
             <div className="flex w-max flex-row gap-2 pb-2">
               <Button variant="outline" className="rounded-full px-5 py-4">
                 <Upload size={16} />
@@ -171,13 +183,17 @@ export default function AgentsPage() {
                       Built-in browser for research, creation, and goals
                     </p>
                   </div>
-                  <Link href="/agents/muse" className="ml-auto py-2 shadow-md shadow-[#ff2261] rounded-full bg-rose-500 px-5 text-white hover:bg-rose-600">
-                   Start Creating with Muse
+                  <Link
+                    href="/agents/muse"
+                    className="ml-auto shrink-0 whitespace-nowrap rounded-full bg-rose-500 px-5 py-2 text-white hover:bg-rose-600"
+                  >
+                    Start Creating with Muse
                   </Link>
+
                 </div>
               </Card>
             </CarouselItem>
-             { 
+            {
               /** CHATGPT
                * <CarouselItem className="basis-1/3  pl-4">
               <Card className="group relative border-2 h-90 overflow-hidden rounded-[45px] ring-1 ring-white/10">
@@ -216,7 +232,7 @@ export default function AgentsPage() {
               </Card>
             </CarouselItem>
                */
-             }
+            }
           </CarouselContent >
           <div className="flex w-full justify-between gap-4">
             <CarouselPrevious >

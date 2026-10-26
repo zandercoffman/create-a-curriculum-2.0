@@ -36,10 +36,10 @@ export default function CreateCurriculumPage() {
 
 
     return (
-        <div className="w-full mx-auto px-6 py-12">
-            <div className="mx-auto grid w-full max-w-5xl items-center gap-10 lg:grid-cols-2">
+        <div className="w-full mr-auto px-6 py-12">
+            <div className=" grid w-full max-w-5xl items-center gap-10 lg:grid-cols-2">
                 {/* Left — copy */}
-                <section className="flex flex-col items-start gap-5">
+                <section className="flex flex-col items-start mr-auto gap-5">
                     <span style={{
                         display: "inline-flex",
                         alignItems: "center",

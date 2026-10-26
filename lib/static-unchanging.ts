@@ -56,7 +56,7 @@ export const navItems = [
         icon: LayoutDashboard,
         items: [
             /**
-             * {
+             *  {
                 label: "Schedule",
                 icon: Calendar,
                 href: "/schedule",
@@ -67,6 +67,8 @@ export const navItems = [
                 href: "/goals",
             },
              */
+
+           
             {
                 label: "Lists (Products)",
                 icon: GalleryHorizontalEnd,
