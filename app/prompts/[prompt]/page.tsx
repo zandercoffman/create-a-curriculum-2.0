@@ -4,7 +4,7 @@ import { use, useState } from "react"
 
 import { nofex } from "@/lib/fonts"
 import { cn } from "@/lib/utils"
-import {allPrompts} from "@/lib/prompts"
+import { allPrompts } from "@/lib/prompts"
 import { findPrompt } from "@/lib/prompts/custom-store"
 
 import { Input } from "@/components/ui/input"
@@ -33,6 +33,9 @@ import {
 } from "@/components/ui/select"
 import { ArrowLeft, ArrowUpRight, Copy, Sparkles } from "lucide-react"
 import Link from "next/link"
+import { useMobile } from "@/lib/useMobile"
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
+import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select"
 
 /* -------------------------------------------------------------------------- */
 /*                           Prompt-in-link limit                              */
@@ -203,13 +206,13 @@ const aiOptions = [
     },
     {
         // Documented format — not live-verified
-        id: "meta-ai",
-        name: "Meta AI",
-        url: "https://www.meta.ai/?q=",
-        baseUrl: "https://www.meta.ai",
+        id: "muse-ai",
+        name: "Muse",
+        url: "https://www.muse.ai/?q=",
+        baseUrl: "https://www.muse.ai",
         logo: MetaLogo,
         color: "#0467DF",
-        supportsLink: true,
+        supportsLink: false,
     },
 ]
 
@@ -218,6 +221,46 @@ const aiOptions = [
 /* -------------------------------------------------------------------------- */
 
 type AIOption = (typeof aiOptions)[number]
+
+
+function AIRowMobile({
+    ai,
+    prefills,
+    tooLong,
+    onSelect,
+}: {
+    ai: AIOption
+    prefills: boolean
+    tooLong: boolean
+    onSelect: (id: string) => void
+}) {
+    const Logo = ai.logo
+
+    return (
+        <button
+            type="button"
+            onClick={() => onSelect(ai.id)}
+            style={{ borderColor: ai.color }}
+            className="flex min-h-[64px] w-full items-center gap-3 rounded-xl border-2 px-4 py-3 text-left transition hover:bg-muted active:scale-[0.98]"
+        >
+            <Logo />
+
+            <span className="flex min-w-0 flex-col">
+                <span className="font-medium">{ai.name}</span>
+
+            </span>
+
+            <span className="ml-auto shrink-0 text-muted-foreground">
+                {prefills ? (
+                    <ArrowUpRight className="size-4" />
+                ) : (
+                    <Copy className="size-4" />
+                )}
+            </span>
+        </button>
+    )
+}
+
 
 function AIRow({
     ai,
@@ -361,7 +404,29 @@ export default function PromptIndividualPage({
 
     const handleCopy = async () => {
         try {
-            await navigator.clipboard.writeText(generatedPrompt)
+            // Modern Clipboard API
+            if (navigator.clipboard?.writeText) {
+                await navigator.clipboard.writeText(generatedPrompt)
+            } else {
+                // Fallback for mobile Safari / insecure contexts
+                const textArea = document.createElement("textarea")
+                textArea.value = generatedPrompt
+                textArea.style.position = "fixed"
+                textArea.style.left = "-9999px"
+                textArea.style.top = "0"
+                textArea.style.opacity = "0"
+
+                document.body.appendChild(textArea)
+                textArea.focus()
+                textArea.select()
+
+                const successful = document.execCommand("copy")
+                document.body.removeChild(textArea)
+
+                if (!successful) {
+                    throw new Error("Clipboard copy failed")
+                }
+            }
 
             setCopied(true)
 
@@ -425,357 +490,762 @@ export default function PromptIndividualPage({
     /*                                  UI                                     */
     /* ---------------------------------------------------------------------- */
 
-    return (
-        <main suppressHydrationWarning className="relative flex h-[90vh] w-[95vw] flex-row gap-8 p-20">
-            {/* ---------------------------------------------------------------- */}
-            {/*                            Back button                            */}
-            {/* ---------------------------------------------------------------- */}
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const isMobile = useMobile();
 
-            <Link href="/prompts" className="absolute left-4 top-4 flex items-center gap-2">
-                <Button variant="outline" className={" w-[100px] rounded-full px-2"}><ArrowLeft className="size-4" /> Back</Button>
-            </Link>
+    if (isMobile === null) return <></>
+    if (!isMobile) {
+        return (
+            <main suppressHydrationWarning className="relative flex h-[90vh] w-[95vw] flex-row gap-8 p-20">
+                {/* ---------------------------------------------------------------- */}
+                {/*                            Back button                            */}
+                {/* ---------------------------------------------------------------- */}
+
+                <Link href="/prompts" className="absolute left-4 top-4 flex items-center gap-2">
+                    <Button variant="outline" className={" w-[100px] rounded-full px-2"}><ArrowLeft className="size-4" /> Back</Button>
+                </Link>
 
 
-            {/* ---------------------------------------------------------------- */}
-            {/*                            VARIABLES                            */}
-            {/* ---------------------------------------------------------------- */}
+                {/* ---------------------------------------------------------------- */}
+                {/*                            VARIABLES                            */}
+                {/* ---------------------------------------------------------------- */}
 
-            <section className="flex h-full min-h-0 w-1/2 flex-col gap-2">
-                <div className="mb-4 flex flex-col gap-2">
-                    <h1
-                        className={cn(
-                            nofex.className,
-                            "text-3xl font-bold text-[#f06565]"
-                        )}
-                    >
-                        {gottenPrompt.displayTitle}
-                    </h1>
-
-                    <p className="text-sm text-foreground/70">
-                        {gottenPrompt.displayDescription}
-                    </p>
-                </div>
-
-                <div className="flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto pr-2">
-                    {Object.entries(
-                        gottenPrompt.variables
-                    ).map(([key, variable]) => (
-                        <div
-                            key={key}
-                            className="flex flex-col gap-2"
+                <section className="flex h-[80vh] min-h-0 w-1/2 flex-col gap-2">
+                    <div className="mb-4 flex flex-col gap-2">
+                        <h1
+                            className={cn(
+                                nofex.className,
+                                "text-3xl font-bold text-[#f06565]"
+                            )}
                         >
-                            <Label htmlFor={key}>
-                                {variable.label}
+                            {gottenPrompt.displayTitle}
+                        </h1>
 
-                                {variable.required && (
-                                    <span className="ml-1 text-[#f06565]">
-                                        *
-                                    </span>
-                                )}
-                            </Label>
+                        <p className="text-sm text-foreground/70">
+                            {gottenPrompt.displayDescription}
+                        </p>
+                    </div>
 
-                            {/* Text */}
-                            {variable.type === "text" && (
-                                <Input
-                                    id={key}
-                                    type="text"
-                                    placeholder={
-                                        variable.placeholder
-                                    }
-                                    required={
-                                        variable.required
-                                    }
-                                    value={
-                                        (values[key] as string) ??
-                                        ""
-                                    }
-                                    onChange={(e) =>
-                                        updateValue(
-                                            key,
-                                            e.target.value
-                                        )
-                                    }
-                                />
-                            )}
+                    <div className="flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto pr-2">
+                        {Object.entries(
+                            gottenPrompt.variables
+                        ).map(([key, variable]) => (
+                            <div
+                                key={key}
+                                className="flex flex-col gap-2"
+                            >
+                                <Label htmlFor={key}>
+                                    {variable.label}
 
-                            {/* Textarea */}
-                            {variable.type === "textarea" && (
-                                <Textarea
-                                    id={key}
-                                    placeholder={
-                                        variable.placeholder
-                                    }
-                                    required={
-                                        variable.required
-                                    }
-                                    value={
-                                        (values[key] as string) ??
-                                        ""
-                                    }
-                                    onChange={(e) =>
-                                        updateValue(
-                                            key,
-                                            e.target.value
-                                        )
-                                    }
-                                />
-                            )}
+                                    {variable.required && (
+                                        <span className="ml-1 text-[#f06565]">
+                                            *
+                                        </span>
+                                    )}
+                                </Label>
 
-                            {/* Number */}
-                            {variable.type === "number" && (
-                                <Input
-                                    id={key}
-                                    type="number"
-                                    placeholder={
-                                        variable.placeholder
-                                    }
-                                    required={
-                                        variable.required
-                                    }
-                                    value={
-                                        (values[key] as
-                                            | number
-                                            | "") ?? ""
-                                    }
-                                    onChange={(e) =>
-                                        updateValue(
-                                            key,
-                                            e.target.value === ""
-                                                ? ""
-                                                : Number(
-                                                    e.target.value
-                                                )
-                                        )
-                                    }
-                                />
-                            )}
-
-                            {/* Date */}
-                            {variable.type === "date" && (
-                                <Input
-                                    id={key}
-                                    type="date"
-                                    required={
-                                        variable.required
-                                    }
-                                    value={
-                                        (values[key] as string) ??
-                                        ""
-                                    }
-                                    onChange={(e) =>
-                                        updateValue(
-                                            key,
-                                            e.target.value
-                                        )
-                                    }
-                                />
-                            )}
-
-                            {/* Select */}
-                            {variable.type === "select" && (
-                                <Select
-                                    value={
-                                        (values[key] as string) ??
-                                        ""
-                                    }
-                                    onValueChange={(value) => {
-                                        if (value !== null) {
+                                {/* Text */}
+                                {variable.type === "text" && (
+                                    <Input
+                                        id={key}
+                                        type="text"
+                                        placeholder={
+                                            variable.placeholder
+                                        }
+                                        required={
+                                            variable.required
+                                        }
+                                        value={
+                                            (values[key] as string) ??
+                                            ""
+                                        }
+                                        onChange={(e) =>
                                             updateValue(
                                                 key,
-                                                value
-                                            )
-                                        }
-                                    }}
-                                >
-                                    <SelectTrigger
-                                        id={key}
-                                        className={cn(
-                                            sharedClassName
-                                        )}
-                                    >
-                                        <SelectValue
-                                            placeholder={
-                                                variable.placeholder ??
-                                                "Select an option"
-                                            }
-                                        />
-                                    </SelectTrigger>
-
-                                    <SelectContent>
-                                        {variable.options?.map(
-                                            (option) => (
-                                                <SelectItem
-                                                    key={option}
-                                                    value={option}
-                                                >
-                                                    {option}
-                                                </SelectItem>
-                                            )
-                                        )}
-                                    </SelectContent>
-                                </Select>
-                            )}
-
-                            {/* Boolean */}
-                            {variable.type === "boolean" && (
-                                <div className="flex items-center gap-3">
-                                    <Checkbox
-                                        id={key}
-                                        checked={
-                                            (values[
-                                                key
-                                            ] as boolean) ??
-                                            false
-                                        }
-                                        onCheckedChange={(
-                                            checked
-                                        ) =>
-                                            updateValue(
-                                                key,
-                                                checked === true
+                                                e.target.value
                                             )
                                         }
                                     />
+                                )}
 
-                                    <Label
-                                        htmlFor={key}
-                                        className="cursor-pointer font-normal"
+                                {/* Textarea */}
+                                {variable.type === "textarea" && (
+                                    <Textarea
+                                        id={key}
+                                        placeholder={
+                                            variable.placeholder
+                                        }
+                                        required={
+                                            variable.required
+                                        }
+                                        value={
+                                            (values[key] as string) ??
+                                            ""
+                                        }
+                                        onChange={(e) =>
+                                            updateValue(
+                                                key,
+                                                e.target.value
+                                            )
+                                        }
+                                    />
+                                )}
+
+                                {/* Number */}
+                                {variable.type === "number" && (
+                                    <Input
+                                        id={key}
+                                        type="number"
+                                        placeholder={
+                                            variable.placeholder
+                                        }
+                                        required={
+                                            variable.required
+                                        }
+                                        value={
+                                            (values[key] as
+                                                | number
+                                                | "") ?? ""
+                                        }
+                                        onChange={(e) =>
+                                            updateValue(
+                                                key,
+                                                e.target.value === ""
+                                                    ? ""
+                                                    : Number(
+                                                        e.target.value
+                                                    )
+                                            )
+                                        }
+                                    />
+                                )}
+
+                                {/* Date */}
+                                {variable.type === "date" && (
+                                    <Input
+                                        id={key}
+                                        type="date"
+                                        required={
+                                            variable.required
+                                        }
+                                        value={
+                                            (values[key] as string) ??
+                                            ""
+                                        }
+                                        onChange={(e) =>
+                                            updateValue(
+                                                key,
+                                                e.target.value
+                                            )
+                                        }
+                                    />
+                                )}
+
+                                {/* Select */}
+                                {variable.type === "select" && (
+                                    <Select
+                                        value={
+                                            (values[key] as string) ??
+                                            ""
+                                        }
+                                        onValueChange={(value) => {
+                                            if (value !== null) {
+                                                updateValue(
+                                                    key,
+                                                    value
+                                                )
+                                            }
+                                        }}
                                     >
-                                        {variable.question}
-                                    </Label>
-                                </div>
-                            )}
-                        </div>
-                    ))}
-                </div>
-            </section>
+                                        <SelectTrigger
+                                            id={key}
+                                            className={cn(
+                                                sharedClassName
+                                            )}
+                                        >
+                                            <SelectValue
+                                                placeholder={
+                                                    variable.placeholder ??
+                                                    "Select an option"
+                                                }
+                                            />
+                                        </SelectTrigger>
 
-            {/* ---------------------------------------------------------------- */}
-            {/*                          GENERATED PROMPT                        */}
-            {/* ---------------------------------------------------------------- */}
+                                        <SelectContent>
+                                            {variable.options?.map(
+                                                (option) => (
+                                                    <SelectItem
+                                                        key={option}
+                                                        value={option}
+                                                    >
+                                                        {option}
+                                                    </SelectItem>
+                                                )
+                                            )}
+                                        </SelectContent>
+                                    </Select>
+                                )}
 
-            <section className="flex h-full min-h-0 w-1/2 flex-col gap-3">
-                <Label className="text-sm font-medium">
-                    Generated Prompt
-                </Label>
+                                {/* Boolean */}
+                                {variable.type === "boolean" && (
+                                    <div className="flex items-center gap-3">
+                                        <Checkbox
+                                            id={key}
+                                            checked={
+                                                (values[
+                                                    key
+                                                ] as boolean) ??
+                                                false
+                                            }
+                                            onCheckedChange={(
+                                                checked
+                                            ) =>
+                                                updateValue(
+                                                    key,
+                                                    checked === true
+                                                )
+                                            }
+                                        />
 
-                <Textarea
-                    value={generatedPrompt}
-                    readOnly
-                    className="min-h-0 flex-1 resize-none"
-                />
+                                        <Label
+                                            htmlFor={key}
+                                            className="cursor-pointer font-normal"
+                                        >
+                                            {variable.question}
+                                        </Label>
+                                    </div>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+                </section>
 
-                {/* Action Buttons */}
-                <div className="flex w-full gap-3">
-                    <Button
-                        type="button"
-                        variant="outline"
-                        className="flex-1 rounded-full h-10 py-4"
-                        onClick={handleCopy}
-                    >
-                        <Copy />
-                        {copied ? "Copied!" : "Copy"}
-                    </Button>
+                {/* ---------------------------------------------------------------- */}
+                {/*                          GENERATED PROMPT                        */}
+                {/* ---------------------------------------------------------------- */}
 
-                    <Drawer swipeDirection="right">
-                        <DrawerTrigger
-                            render={
-                                <Button
-                                    type="button"
-                                    className=" rounded-full flex-1 h-10! py-4"
-                                >
-                                    <Sparkles />
-                                    Open in AI
-                                </Button>
-                            }
+                <section className="flex h-full min-h-0 w-1/2 flex-col gap-3">
+                    <Label className="text-sm font-medium">
+                        Generated Prompt
+                    </Label>
+
+                    <Textarea
+                        value={generatedPrompt}
+                        readOnly
+                        className="min-h-0 flex-1 resize-none"
+                    />
+
+                    {/* Action Buttons */}
+                    <div className="flex w-full gap-3">
+                        <Button
+                            type="button"
+                            variant="outline"
+                            className="flex-1 rounded-full h-10 py-4"
+                            onClick={handleCopy}
                         >
-                            Open in AI
-                        </DrawerTrigger>
+                            <Copy />
+                            {copied ? "Copied!" : "Copy"}
+                        </Button>
 
-                        <DrawerContent>
-                            <DrawerHeader>
-                                <DrawerTitle>
-                                    Open in AI
-                                </DrawerTitle>
+                        <Drawer swipeDirection="right">
+                            <DrawerTrigger
+                                render={
+                                    <Button
+                                        type="button"
+                                        className=" rounded-full flex-1 h-10! py-4"
+                                    >
+                                        <Sparkles />
+                                        Open in AI
+                                    </Button>
+                                }
+                            >
+                                Open in AI
+                            </DrawerTrigger>
 
-                                <DrawerDescription>
-                                    Pick an AI to send this prompt
-                                    to. Most open with your prompt
-                                    already filled in — just hit
-                                    send. If a prompt is too long
-                                    for a link, or the AI
-                                    doesn&apos;t support it,
-                                    your prompt is copied instead
-                                    so you can paste it yourself.
-                                </DrawerDescription>
-                            </DrawerHeader>
+                            <DrawerContent>
+                                <DrawerHeader>
+                                    <DrawerTitle>
+                                        Open in AI
+                                    </DrawerTitle>
 
-                            {notice && (
-                                <div className="mx-4 mb-2 rounded-xl border border-dashed px-4 py-3 text-sm text-foreground/80">
-                                    {notice}
-                                </div>
-                            )}
+                                    <DrawerDescription>
+                                        Pick an AI to send this prompt
+                                        to. Most open with your prompt
+                                        already filled in — just hit
+                                        send. If a prompt is too long
+                                        for a link, or the AI
+                                        doesn&apos;t support it,
+                                        your prompt is copied instead
+                                        so you can paste it yourself.
+                                    </DrawerDescription>
+                                </DrawerHeader>
 
-                            <div className="flex flex-col gap-4 p-4">
-                                {prefillOptions.length > 0 && (
-                                    <div className="flex flex-col gap-2">
-                                        <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                                            Opens with prompt
-                                            prefilled
-                                        </p>
+                                {notice && (
+                                    <div className="mx-4 mb-2 rounded-xl border border-dashed px-4 py-3 text-sm text-foreground/80">
+                                        {notice}
+                                    </div>
+                                )}
 
-                                        {prefillOptions.map(
-                                            (ai) => (
+                                <div className="flex flex-col gap-4 p-4">
+                                    {prefillOptions.length > 0 && (
+                                        <div className="flex flex-col gap-2">
+                                            <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                                                Opens with prompt
+                                                prefilled
+                                            </p>
+
+                                            {prefillOptions.map(
+                                                (ai) => (
+                                                    <AIRow
+                                                        key={ai.id}
+                                                        ai={ai}
+                                                        prefills
+                                                        tooLong={false}
+                                                        onSelect={
+                                                            handleUseInAI
+                                                        }
+                                                    />
+                                                )
+                                            )}
+                                        </div>
+                                    )}
+
+                                    {copyOptions.length > 0 && (
+                                        <div className="flex flex-col gap-2">
+                                            <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                                                Copy & paste manually
+                                            </p>
+
+                                            {copyOptions.map((ai) => (
                                                 <AIRow
                                                     key={ai.id}
                                                     ai={ai}
-                                                    prefills
-                                                    tooLong={false}
+                                                    prefills={false}
+                                                    tooLong={
+                                                        ai.supportsLink
+                                                    }
                                                     onSelect={
                                                         handleUseInAI
                                                     }
                                                 />
-                                            )
-                                        )}
-                                    </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+
+                                <DrawerFooter>
+                                    <DrawerClose
+                                        render={
+                                            <Button variant="outline" />
+                                        }
+                                    >
+                                        Cancel
+                                    </DrawerClose>
+                                </DrawerFooter>
+                            </DrawerContent>
+                        </Drawer>
+                    </div>
+                </section>
+            </main>
+        )
+    } else {
+        return (
+            <>
+                <main suppressHydrationWarning className="relative flex h-[90vh] pt-20 mx-auto w-[95vw] flex-col gap-8">
+                    {/* Back button */}
+                    <Link href="/prompts" className="absolute left-4 top-4 flex items-center gap-2">
+                        <Button variant="outline" className={" w-[100px] rounded-full px-2"}><ArrowLeft className="size-4" /> Back</Button>
+                    </Link>
+
+                    {/* VARIABLES */}
+                    <section className="flex h-[72vh] min-h-0 w-full flex-col gap-2">
+                        <div className="mb-4 flex flex-col gap-2">
+                            <h1
+                                className={cn(
+                                    nofex.className,
+                                    "text-2xl text-center font-bold text-[#f06565]"
                                 )}
+                            >
+                                {gottenPrompt.displayTitle}
+                            </h1>
 
-                                {copyOptions.length > 0 && (
-                                    <div className="flex flex-col gap-2">
-                                        <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                                            Copy & paste manually
-                                        </p>
+                            <p className=" text-center text-sm text-foreground/70">
+                                {gottenPrompt.displayDescription}
+                            </p>
+                        </div>
 
-                                        {copyOptions.map((ai) => (
-                                            <AIRow
-                                                key={ai.id}
-                                                ai={ai}
-                                                prefills={false}
-                                                tooLong={
-                                                    ai.supportsLink
+                        <div className="flex min-h-0 w-[95%] mx-auto flex-1 flex-col gap-6 overflow-y-auto pr-2 pb-20">
+                            {Object.entries(
+                                gottenPrompt.variables
+                            ).map(([key, variable]) => (
+                                <div
+                                    key={key}
+                                    className="flex flex-col gap-2"
+                                >
+                                    <Label htmlFor={key}>
+                                        {variable.label}
+
+                                        {variable.required && (
+                                            <span className="ml-1 text-[#f06565]">
+                                                *
+                                            </span>
+                                        )}
+                                    </Label>
+
+                                    {/* Text */}
+                                    {variable.type === "text" && (
+                                        <Input
+                                            id={key}
+                                            type="text"
+                                            placeholder={
+                                                variable.placeholder
+                                            }
+                                            required={
+                                                variable.required
+                                            }
+                                            value={
+                                                (values[key] as string) ??
+                                                ""
+                                            }
+                                            onChange={(e) =>
+                                                updateValue(
+                                                    key,
+                                                    e.target.value
+                                                )
+                                            }
+                                        />
+                                    )}
+
+                                    {/* Textarea */}
+                                    {variable.type === "textarea" && (
+                                        <Textarea
+                                            id={key}
+                                            placeholder={
+                                                variable.placeholder
+                                            }
+                                            required={
+                                                variable.required
+                                            }
+                                            value={
+                                                (values[key] as string) ??
+                                                ""
+                                            }
+                                            onChange={(e) =>
+                                                updateValue(
+                                                    key,
+                                                    e.target.value
+                                                )
+                                            }
+                                        />
+                                    )}
+
+                                    {/* Number */}
+                                    {variable.type === "number" && (
+                                        <Input
+                                            id={key}
+                                            type="number"
+                                            placeholder={
+                                                variable.placeholder
+                                            }
+                                            required={
+                                                variable.required
+                                            }
+                                            value={
+                                                (values[key] as
+                                                    | number
+                                                    | "") ?? ""
+                                            }
+                                            onChange={(e) =>
+                                                updateValue(
+                                                    key,
+                                                    e.target.value === ""
+                                                        ? ""
+                                                        : Number(
+                                                            e.target.value
+                                                        )
+                                                )
+                                            }
+                                        />
+                                    )}
+
+                                    {/* Date */}
+                                    {variable.type === "date" && (
+                                        <Input
+                                            id={key}
+                                            type="date"
+                                            required={
+                                                variable.required
+                                            }
+                                            value={
+                                                (values[key] as string) ??
+                                                ""
+                                            }
+                                            onChange={(e) =>
+                                                updateValue(
+                                                    key,
+                                                    e.target.value
+                                                )
+                                            }
+                                        />
+                                    )}
+
+                                    {/* Select */}
+                                    {variable.type === "select" && (
+                                        <NativeSelect
+                                            id={key}
+                                            className={cn(sharedClassName)}
+                                            required={variable.required}
+                                            value={(values[key] as string) ?? ""}
+                                            onChange={(e) => updateValue(key, e.target.value)}
+                                        >
+                                            <NativeSelectOption value="" disabled>
+                                                {variable.placeholder ?? "Select an option"}
+                                            </NativeSelectOption>
+
+                                            {variable.options?.map((option) => (
+                                                <NativeSelectOption key={option} value={option}>
+                                                    {option}
+                                                </NativeSelectOption>
+                                            ))}
+                                        </NativeSelect>
+                                    )}
+
+
+                                    {/* Boolean */}
+                                    {variable.type === "boolean" && (
+                                        <div className="flex items-center gap-3">
+                                            <Checkbox
+                                                id={key}
+                                                checked={
+                                                    (values[
+                                                        key
+                                                    ] as boolean) ??
+                                                    false
                                                 }
-                                                onSelect={
-                                                    handleUseInAI
+                                                onCheckedChange={(
+                                                    checked
+                                                ) =>
+                                                    updateValue(
+                                                        key,
+                                                        checked === true
+                                                    )
                                                 }
                                             />
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
 
-                            <DrawerFooter>
-                                <DrawerClose
-                                    render={
-                                        <Button variant="outline" />
-                                    }
-                                >
-                                    Cancel
-                                </DrawerClose>
-                            </DrawerFooter>
-                        </DrawerContent>
-                    </Drawer>
-                </div>
-            </section>
-        </main>
-    )
+                                            <Label
+                                                htmlFor={key}
+                                                className="cursor-pointer font-normal"
+                                            >
+                                                {variable.question}
+                                            </Label>
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                </main>
+
+                {/* GENERATED PROMPT — drawer, outside <main> so fixed works */}
+
+                {/* GENERATED PROMPT — Mobile Drawer */}
+                <Drawer>
+                    <DrawerTrigger
+                        render={
+                            <Button
+                                type="button"
+                                className="
+                    fixed inset-x-4 bottom-24 z-50
+                    h-12 rounded-full
+                    border border-[#f06565]/50
+                    bg-[#f06565]
+                    text-white font-semibold
+                    shadow-[0_4px_20px_rgba(240,101,101,0.25),inset_0_1px_1px_rgba(255,255,255,0.35)]
+                    backdrop-blur-2xl backdrop-saturate-150
+                    hover:bg-[#f06565]/75
+                    active:scale-[0.98]
+                    transition-all duration-200
+                    dark:border-[#f06565]/40
+                    dark:bg-[#f06565]/45
+                    dark:hover:bg-[#f06565]/55
+                "
+                            >
+                                <Sparkles className="size-4" />
+                                View Generated Prompt
+                            </Button>
+                        }
+                    >
+                        View Generated Prompt
+                    </DrawerTrigger>
+
+                    <DrawerContent
+                        className="
+            flex flex-col
+            h-[85dvh] max-h-[90dvh]
+            overflow-hidden
+            rounded-t-[24px]
+            border-t border-border/60
+            bg-background
+        "
+                    >
+                        {/* Fixed Header */}
+                        <DrawerHeader className="shrink-0 px-5 pt-5 pb-3">
+                            <DrawerTitle className="text-lg font-semibold">
+                                Generated Prompt
+                            </DrawerTitle>
+
+                            <DrawerDescription>
+                                Copy it, or send it straight to an AI.
+                            </DrawerDescription>
+                        </DrawerHeader>
+
+                        {/* Scrollable Content */}
+                        <div
+                            className="
+                flex min-h-0 flex-1 flex-col
+                gap-5 overflow-y-auto
+                overscroll-contain
+                px-5 pb-5
+                [scrollbar-width:none]
+                [&::-webkit-scrollbar]:hidden
+            "
+                        >
+                            {/* Generated Prompt */}
+                            <Textarea
+                                value={generatedPrompt}
+                                readOnly
+                                className="
+                    min-h-[180px]
+                    w-full
+                    resize-none
+                    rounded-2xl
+                    text-sm
+                    leading-relaxed
+                "
+                            />
+
+                            {/* Copy Button */}
+                            <Button
+                                type="button"
+                                variant="outline"
+                                className="h-11 w-full shrink-0 rounded-full"
+                                onClick={handleCopy}
+                            >
+                                <Copy className="size-4" />
+                                {copied ? "Copied!" : "Copy"}
+                            </Button>
+
+                            {/* Notice */}
+                            {notice && (
+                                <div className="
+                    shrink-0 rounded-xl
+                    border border-dashed
+                    px-4 py-3
+                    text-sm text-foreground/80
+                ">
+                                    {notice}
+                                </div>
+                            )}
+
+                            {/* Prefilled AI Providers */}
+                            {prefillOptions.length > 0 && (
+                                <div className="flex shrink-0 flex-col gap-3">
+                                    <p className="
+                        text-xs font-semibold
+                        uppercase tracking-wider
+                        text-muted-foreground
+                    ">
+                                        Opens with prompt prefilled
+                                    </p>
+
+                                    <Carousel
+                                        opts={{ align: "start" }}
+                                        className="w-full"
+                                    >
+                                        <CarouselContent className="-ml-3">
+                                            {prefillOptions.map((ai) => (
+                                                <CarouselItem
+                                                    key={ai.id}
+                                                    className="basis-[75%] pl-3"
+                                                >
+                                                    <AIRowMobile
+                                                        ai={ai}
+                                                        prefills
+                                                        tooLong={false}
+                                                        onSelect={handleUseInAI}
+                                                    />
+                                                </CarouselItem>
+                                            ))}
+                                        </CarouselContent>
+                                    </Carousel>
+                                </div>
+                            )}
+
+                            {/* Copy & Paste AI Providers */}
+                            {copyOptions.length > 0 && (
+                                <div className="flex shrink-0 flex-col gap-3">
+                                    <p className="
+                        text-xs font-semibold
+                        uppercase tracking-wider
+                        text-muted-foreground
+                    ">
+                                        Copy & paste manually
+                                    </p>
+
+                                    <Carousel
+                                        opts={{ align: "start" }}
+                                        className="w-full"
+                                    >
+                                        <CarouselContent className="-ml-3">
+                                            {copyOptions.map((ai) => (
+                                                <CarouselItem
+                                                    key={ai.id}
+                                                    className="basis-[40%] pl-3"
+                                                >
+                                                    <AIRowMobile
+                                                        ai={ai}
+                                                        prefills={false}
+                                                        tooLong={
+                                                            ai.supportsLink &&
+                                                            ai.url.length + encodedPrompt.length >
+                                                            MAX_LINK_LENGTH
+                                                        }
+                                                        onSelect={handleUseInAI}
+                                                    />
+                                                </CarouselItem>
+                                            ))}
+                                        </CarouselContent>
+                                        <CarouselPrevious />
+                                        <CarouselNext />
+                                    </Carousel>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Fixed Footer */}
+                        <DrawerFooter className="
+            shrink-0
+            border-t border-border/50
+            bg-background
+            px-5 pt-3
+            pb-[calc(1rem+env(safe-area-inset-bottom))]
+        ">
+                            <DrawerClose
+                                render={
+                                    <Button
+                                        variant="outline"
+                                        className="h-11 w-full rounded-full"
+                                    />
+                                }
+                            >
+                                Close
+                            </DrawerClose>
+                        </DrawerFooter>
+                    </DrawerContent>
+                </Drawer>
+
+            </>
+        )
+    }
+
 }

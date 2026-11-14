@@ -33,6 +33,94 @@ export const curriculumPrompts: PromptSchema[] = [
     }
   },
   {
+    "displayTitle": "AZ Curriculum Planner",
+    "displayDescription": "Generate a structured, personalized curriculum tailored to a learner's grade level, subjects, educational goals, and lesson requirements.",
+    "id": "curriculum-planner-az",
+    "description": "A reusable curriculum planning prompt that generates organized educational plans based on learner information, learning objectives, curriculum duration, and lesson structure.",
+    "category": "Education",
+    "prompt": "You are an expert curriculum designer and educational planning specialist. Your task is to create a comprehensive, structured, and engaging curriculum tailored to the learner's needs.\n\nLEARNER INFORMATION\n- Learner Name: {learnerName}\n- Grade Level: {gradeLevel}\n- Subject(s): {subjects}\n- Primary Learning Goal: {goal}\n\nCURRICULUM REQUIREMENTS\n- Curriculum Length: {curriculumLength}\n- Number of Lessons: {numLessons}\n- Additional Requirements: {additionalRequirements}\n\nINSTRUCTIONS\n1. Design a curriculum that aligns with the learner's grade level and stated educational goals.\n2. Organize the curriculum into a logical progression of lessons, moving from foundational concepts to more advanced material.\n3. Provide clear lesson titles, descriptions, learning objectives, and instructional activities.\n4. Ensure the curriculum fits the requested duration and number of lessons.\n5. Include appropriate assessments, practice activities, and learning resources where relevant.\n6. Adapt the complexity, vocabulary, and instructional approach to the learner's grade level.\n7. Incorporate all additional requirements while maintaining educational quality and consistency.\n8. Avoid inventing official academic standards, citations, or requirements. Clearly distinguish suggested activities from established standards.\n\nOUTPUT REQUIREMENTS\nProduce a complete, clearly organized curriculum plan with:\n- Curriculum overview and learning objectives.\n- Lesson-by-lesson breakdown.\n- Key concepts and skills covered in each lesson.\n- Suggested instructional activities and resources.\n- Assessment and evaluation opportunities.\n- Expected learning outcomes.\n\nEnsure every lesson contributes meaningfully toward the primary learning goal. The final curriculum should be practical, age-appropriate, coherent, and ready for further review and customization.",
+    "variables": {
+      "learnerName": {
+        "label": "Learner Name",
+        "question": "What is the learner's name?",
+        "type": "text",
+        "placeholder": "Enter learner's name",
+        "required": true
+      },
+      "gradeLevel": {
+        "label": "Grade Level",
+        "question": "What grade level is the learner currently in?",
+        "type": "select",
+        "placeholder": "Select a grade level",
+        "options": [
+          "Kindergarten",
+          "1st Grade",
+          "2nd Grade",
+          "3rd Grade",
+          "4th Grade",
+          "5th Grade",
+          "6th Grade",
+          "7th Grade",
+          "8th Grade",
+          "9th Grade",
+          "10th Grade",
+          "11th Grade",
+          "12th Grade",
+          "College",
+          "Adult Education"
+        ],
+        "required": true
+      },
+      "subjects": {
+        "label": "Subjects",
+        "question": "Which subjects should the curriculum cover?",
+        "type": "textarea",
+        "placeholder": "e.g., Mathematics, Science, English",
+        "required": true
+      },
+      "goal": {
+        "label": "Learning Goal",
+        "question": "What should the learner achieve by completing this curriculum?",
+        "type": "textarea",
+        "placeholder": "Describe the primary learning objectives",
+        "required": true
+      },
+      "curriculumLength": {
+        "label": "Curriculum Length",
+        "question": "How long should the curriculum last?",
+        "type": "select",
+        "placeholder": "Select curriculum duration",
+        "options": [
+          "1 Week",
+          "2 Weeks",
+          "3 Weeks",
+          "4 Weeks",
+          "6 Weeks",
+          "8 Weeks",
+          "10 Weeks",
+          "12 Weeks",
+          "1 Semester",
+          "1 Academic Year"
+        ],
+        "required": true
+      },
+      "additionalRequirements": {
+        "label": "Additional Requirements",
+        "question": "Are there any additional instructions, preferences, or constraints?",
+        "type": "textarea",
+        "placeholder": "Include teaching preferences, available resources, learning accommodations, or other requirements",
+        "required": true
+      },
+      "numLessons": {
+        "label": "Number of Lessons",
+        "question": "How many lessons should the curriculum contain?",
+        "type": "number",
+        "placeholder": "e.g., 12",
+        "required": true
+      }
+    }
+  },
+  {
     "displayTitle": "Unit Plan Builder",
     "displayDescription": "Builds a multi-week unit plan with weekly objectives, sequenced lessons, hands-on activities, formative and summative assessments, and differentiation.",
     "id": "curriculum-001",

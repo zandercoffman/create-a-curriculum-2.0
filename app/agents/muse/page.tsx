@@ -31,6 +31,10 @@ import {
 import { TutorialMarkdown } from "./tutorial/TutorialMarkdown";
 // 👇 your TSX section — point this at your actual file
 import CreateCurriculumPage from "./overview/create-curriculum";
+import CreateRoutinePage from "./overview/create-routine";
+import CreateReminderPage from "./overview/create-reminder";
+import CreateResourcePage from "./overview/create-resource";
+import FindInGroupPage from "./overview/find-in-group";
 
 type TutorialSection = {
     id: string;
@@ -59,28 +63,28 @@ const overviewSections: TutorialSection[] = [
         title: "Create a Routine",
         description: "Build a routine with the Muse agent.",
         icon: <Repeat size={20} strokeWidth={2} />,
-        component: CreateCurriculumPage,
+        component: CreateRoutinePage,
     },
      {
         id: "create-reminder",
         title: "Create a Reminder",
         description: "Set a reminder with the Muse agent.",
         icon: <Bell size={20} strokeWidth={2} />,
-        component: CreateCurriculumPage,
+        component: CreateReminderPage,
     },
     {
         id: "create-resource",
         title: "Create a Resource",
         description: "Create a resource with the Muse agent.",
         icon: <FileText size={20} strokeWidth={2} />,
-        component: CreateCurriculumPage,
+        component: CreateResourcePage,
     },
     {
         id: "find-curriculum",
         title: "Find in a Group",
         description: "Find a topic in a group with the Muse agent.",
         icon: <Search size={20} strokeWidth={2} />,
-        component: CreateCurriculumPage,
+        component: FindInGroupPage,
     },
 ];
 
@@ -209,7 +213,7 @@ export default function MuseAgentPage() {
 
     return (
         <SidebarProvider>
-            <Sidebar collapsible="icon" className="bg-white! sticky top-0 h-screen w-[260px] border-r border-slate-200">
+            <Sidebar collapsible="icon" className=" sticky top-0 h-screen w-[260px] border-r border-slate-200">
                 <SidebarHeader>
                     <Image
                         src="/AppIcons/MuseIconExportable1.png"
@@ -245,7 +249,7 @@ export default function MuseAgentPage() {
             </Sidebar>
 
             {/* Main Content */}
-            <main className="min-h-screen w-[80vw] min-w-0 flex-1 bg-white text-slate-950">
+            <main className="min-h-screen w-[80vw] min-w-0 flex-1 dark:text-white text-slate-950">
                 {/* Breadcrumbs */}
                 <section className="flex w-full items-center border-b border-slate-200 px-6 py-4">
                     <div className="flex items-center gap-3">

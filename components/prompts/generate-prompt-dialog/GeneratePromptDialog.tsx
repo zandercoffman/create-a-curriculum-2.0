@@ -37,23 +37,54 @@ const VARIABLE_TYPES: VariableType[] = [
 
 /** Strip markdown fences in case the AI wraps the JSON despite the instructions. */
 function cleanJson(text: string): string {
-  return text.trim().replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/, "")
+  let cleaned = text
+    .trim()
+    .replace(/^```(?:json)?\s*/i, "")
+    .replace(/\s*```$/, "")
+
+  // Convert smart double quotes into standard JSON quotes.
+  cleaned = cleaned.replace(/[\u201C\u201D\u201E\u201F]/g, '"')
+
+  // Repair malformed select options:
+  // "options": "A", "B", "C", "required": true
+  // becomes:
+  // "options": ["A", "B", "C"], "required": true
+
+  cleaned = cleaned.replace(
+    /("options"\s*:\s*)("(?:\\.|[^"\\])*"(?:\s*,\s*"(?:\\.|[^"\\])*")*)(?=\s*,\s*"(?:required|placeholder)"\s*:|\s*})/g,
+    "$1[$2]"
+  )
+
+  return cleaned
 }
 
 function parseImportedPrompt(jsonText: string): PromptSchema {
   let data: unknown
+
   try {
     data = JSON.parse(cleanJson(jsonText))
-  } catch {
+  } catch (error) {
+    console.error("Prompt JSON parsing failed:", error)
+
     throw new Error(
-      "That doesn't look like valid JSON — make sure you copied the AI's entire output."
+      error instanceof Error
+        ? `Invalid JSON: ${error.message}`
+        : "Invalid JSON. Check quotation marks, commas, and brackets."
     )
   }
-  if (typeof data !== "object" || data === null || Array.isArray(data)) {
+
+  if (
+    typeof data !== "object" ||
+    data === null ||
+    Array.isArray(data)
+  ) {
     throw new Error("The output must be a single PromptSchema JSON object.")
   }
+
   const d = data as Record<string, unknown>
-  for (const field of [
+
+  // Validate required top-level fields.
+  const requiredFields = [
     "displayTitle",
     "displayDescription",
     "id",
@@ -61,42 +92,90 @@ function parseImportedPrompt(jsonText: string): PromptSchema {
     "description",
     "category",
     "variables",
-  ]) {
-    if (typeof d[field] === "undefined" || d[field] === null) {
+  ]
+
+  for (const field of requiredFields) {
+    if (d[field] === undefined || d[field] === null) {
       throw new Error(`The JSON is missing the "${field}" field.`)
     }
   }
 
-  const variables = d.variables as Record<string, Record<string, unknown>>
-  if (typeof variables !== "object" || Array.isArray(variables)) {
-    throw new Error(`The "variables" field must be an object.`)
-  }
-  for (const [key, v] of Object.entries(variables)) {
-    if (
-      typeof v.label !== "string" ||
-      typeof v.question !== "string" ||
-      !VARIABLE_TYPES.includes(v.type as VariableType)
-    ) {
-      throw new Error(
-        `Variable "${key}" is missing a label, question, or valid type.`
-      )
-    }
-    if (
-      v.type === "select" &&
-      (!Array.isArray(v.options) || v.options.length === 0)
-    ) {
-      throw new Error(`Select variable "${key}" needs an options array.`)
+  // Validate string fields.
+  const stringFields = [
+    "displayTitle",
+    "displayDescription",
+    "id",
+    "prompt",
+    "description",
+    "category",
+  ]
+
+  for (const field of stringFields) {
+    if (typeof d[field] !== "string" || !(d[field] as string).trim()) {
+      throw new Error(`The "${field}" field must be a non-empty string.`)
     }
   }
 
-  const category = String(d.category)
+  // Validate variables object.
+  if (
+    typeof d.variables !== "object" ||
+    d.variables === null ||
+    Array.isArray(d.variables)
+  ) {
+    throw new Error('The "variables" field must be an object.')
+  }
+
+  const variables = d.variables as Record<string, unknown>
+
+  for (const [key, value] of Object.entries(variables)) {
+    if (
+      typeof value !== "object" ||
+      value === null ||
+      Array.isArray(value)
+    ) {
+      throw new Error(`Variable "${key}" must be an object.`)
+    }
+
+    const v = value as Record<string, unknown>
+
+    if (
+      typeof v.label !== "string" ||
+      typeof v.question !== "string" ||
+      typeof v.type !== "string" ||
+      !VARIABLE_TYPES.includes(v.type as VariableType)
+    ) {
+      throw new Error(
+        `Variable "${key}" is missing a valid label, question, or type.`
+      )
+    }
+
+    // Validate select options.
+    if (v.type === "select") {
+      if (
+        !Array.isArray(v.options) ||
+        v.options.length === 0 ||
+        !v.options.every(
+          (option) => typeof option === "string" && option.trim().length > 0
+        )
+      ) {
+        throw new Error(
+          `Select variable "${key}" needs a non-empty array of text options.`
+        )
+      }
+    }
+  }
+
+  const category = d.category as string
+
   return {
-    displayTitle: String(d.displayTitle),
-    displayDescription: String(d.displayDescription),
-    id: slugify(String(d.id)),
-    prompt: String(d.prompt),
-    description: String(d.description),
-    category: KNOWN_CATEGORIES.includes(category) ? category : "custom",
+    displayTitle: d.displayTitle as string,
+    displayDescription: d.displayDescription as string,
+    id: slugify(d.id as string),
+    prompt: d.prompt as string,
+    description: d.description as string,
+    category: KNOWN_CATEGORIES.includes(category)
+      ? category
+      : "custom",
     variables: variables as PromptSchema["variables"],
   }
 }

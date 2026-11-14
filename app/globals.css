@@ -184,3 +184,13 @@ body {
     background-position: 0% 50%;
   }
 }
+@layer utilities {
+  @keyframes spin-once {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(180deg); }
+  }
+
+  .animate-spin-once {
+    animation: spin-once 0.8s ease-in-out forwards;
+  }
+}

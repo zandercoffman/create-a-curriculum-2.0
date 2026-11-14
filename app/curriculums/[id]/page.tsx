@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { retrieveItemFromIndexedDB } from "@/lib/IndexedDB"
+import { useMobile } from "@/lib/useMobile"
 import { ArrowLeft } from "lucide-react"
 import Link from "next/link"
 import { use, useEffect, useState } from "react"
@@ -66,6 +67,8 @@ export default function CurriculumPreview({
         loadCurriculum()
     }, [id])
 
+    const isMobile = useMobile();
+
     if (isLoading) {
         return <div>Loading curriculum...</div>
     }
@@ -74,20 +77,41 @@ export default function CurriculumPreview({
         return <div>Curriculum not found</div>
     }
 
-    return (
-        <main className="p-20 flex w-[90vw] flex-col gap-4">
+    if (!isMobile) {
+        return (
+            <main className="p-20 flex w-[90vw] flex-col gap-4">
 
-            <Link href="/curriculums" className="flex items-center gap-2">
-                <Button className={"w-[100px] rounded-full px-2"}><ArrowLeft className="size-4" /> Back</Button>
-            </Link>
+                <Link href="/curriculums" className="flex items-center gap-2">
+                    <Button className={"w-[100px] rounded-full px-2"}><ArrowLeft className="size-4" /> Back</Button>
+                </Link>
 
-            <h1 className="text-2xl font-bold">
-                {curriculum.name}
-            </h1>
+                <h1 className="text-2xl font-bold">
+                    {curriculum.name}
+                </h1>
 
-            <p className="whitespace-pre-wrap">
-                {curriculum.curriculum}
-            </p>
-        </main>
-    )
+                <p className="whitespace-pre-wrap">
+                    {curriculum.curriculum}
+                </p>
+            </main>
+        )
+    } else {
+        return (
+            <main className="flex w-screen px-10 py-6 flex-col gap-4">
+
+                <Link href="/curriculums" className="flex items-center gap-2">
+                    <Button className={"w-[100px] rounded-full px-2"}><ArrowLeft className="size-4" /> Back</Button>
+                </Link>
+
+                <h1 className="text-2xl font-bold">
+                    {curriculum.name}
+                </h1>
+
+                <p className="whitespace-pre-wrap text-sm">
+                    {curriculum.curriculum}
+                </p>
+            </main>
+        )
+    }
+
+
 }

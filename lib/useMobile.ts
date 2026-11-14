@@ -1,29 +1,22 @@
-
 "use client";
 
 import { useEffect, useState } from "react";
 
-const MOBILE_BREAKPOINT = 768;
-
 export function useMobile() {
-  const [isMobile, setIsMobile] = useState(false);
+    const [isMobile, setIsMobile] = useState<boolean | null>(null);
 
-  useEffect(() => {
-    const mediaQuery = window.matchMedia(
-      `(max-width: ${MOBILE_BREAKPOINT - 1}px)`
-    );
+    useEffect(() => {
+        const check = () => {
+            console.log("Viewport width:", window.innerWidth);
+            setIsMobile(window.innerWidth < 768);
+        };
 
-    const updateIsMobile = () => {
-      setIsMobile(mediaQuery.matches);
-    };
+        check();
 
-    updateIsMobile();
-    mediaQuery.addEventListener("change", updateIsMobile);
+        window.addEventListener("resize", check);
 
-    return () => {
-      mediaQuery.removeEventListener("change", updateIsMobile);
-    };
-  }, []);
+        return () => window.removeEventListener("resize", check);
+    }, []);
 
-  return isMobile;
+    return isMobile;
 }
