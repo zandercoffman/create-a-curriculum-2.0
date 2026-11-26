@@ -2,8 +2,9 @@
 
 import { useSearchParams } from "next/navigation";
 import ReactMarkdown from "react-markdown";
+import { Suspense } from "react";
 
-export default function MarkdownPage() {
+function MarkdownContent() {
   const searchParams = useSearchParams();
   const text = searchParams.get("text") || "";
 
@@ -66,5 +67,13 @@ export default function MarkdownPage() {
         </ReactMarkdown>
       </div>
     </main>
+  );
+}
+
+export default function MarkdownPage() {
+  return (
+    <Suspense fallback={<main className="min-h-screen bg-background" />}>
+      <MarkdownContent />
+    </Suspense>
   );
 }
