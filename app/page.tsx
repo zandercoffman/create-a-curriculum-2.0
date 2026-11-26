@@ -14,7 +14,6 @@ import { neulis, nofex } from "@/lib/fonts"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import { AbsoluteColorGradient, ColorGradient, MobileBGGradient1 } from "@/components/NameGradient"
-import { useDarkMode } from "@/lib/useDarkMode"
 import { useMobile } from "@/lib/useMobile"
 import { LiquidGlassLogo } from '@/components/liquid-glass-logo';
 import { Button } from "@/components/ui/button"
@@ -30,7 +29,6 @@ export const FacebookFIcon = (props: React.SVGProps<SVGSVGElement>) => (
 
 export default function Home() {
 
-  const { isDark } = useDarkMode()
   const isMobile = useMobile()
   const firstBlog = blogs[0] // TODO: replace with your current post, or tell me where the post data lives and I'll wire it;
 
@@ -242,17 +240,10 @@ export default function Home() {
   else {
     return <section className="flex mt-6 h-full w-[75vw]  mx-auto flex-col items-center justify-center">
 
-      {
-        isDark ? <section className="absolute top-0 w-screen h-[95vh] -z-10 ">
-
-          <ColorGradient color={"#622626"} />
-          <div className="absolute z-1 w-[120%] h-[90%] top-full left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black backdrop-blur-2xl blur-3xl opacity-[90%] rounded-[60px]"></div>
-
-        </section> : <section className="absolute top-0 w-screen h-[95vh] -z-10 ">
+      <section className="absolute top-0 w-screen h-[95vh] -z-10 ">
           <ColorGradient color={"#F06565"} />
           <div className="absolute z-1 w-[80%] h-[90%] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-[#ffffff] blur-3xl opacity-[90%] rounded-[60px]"></div>
-        </section>
-      }
+      </section>
 
 
 
