@@ -239,7 +239,6 @@ const presetConfig = {
   wireframe: false,
   antialias: false,
   colorBlending: 4,
-  backgroundColor: "#FFC600",
   backgroundAlpha: 1,
   grainScale: 0,
   grainSparsity: 0,
