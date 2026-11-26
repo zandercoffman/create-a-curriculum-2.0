@@ -1,5 +1,8 @@
 "use client";
 
+import { useMobile } from "@/lib/useMobile";
+import { useDarkMode } from "@/lib/useDarkMode";
+
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -205,6 +208,8 @@ function SectionMenu({
 }
 
 export default function MuseAgentPage() {
+    const isMobile = useMobile();
+    const { isDark } = useDarkMode();
     const [activeSectionId, setActiveSectionId] = useState(tutorialSections[0].id);
     const activeSection =
         allSections.find((section) => section.id === activeSectionId) ??
@@ -213,7 +218,7 @@ export default function MuseAgentPage() {
 
     return (
         <SidebarProvider>
-            <Sidebar collapsible="icon" className=" sticky top-0 h-screen w-[260px] border-r border-slate-200">
+            <Sidebar collapsible={isMobile ? "offcanvas" : "icon"} className=" sticky top-0 h-screen w-[260px] border-r border-border">
                 <SidebarHeader>
                     <Image
                         src="/AppIcons/MuseIconExportable1.png"
@@ -222,7 +227,7 @@ export default function MuseAgentPage() {
                         height={100}
                         className="mx-auto mt-2 group-data-[collapsible=icon]:hidden"
                     />
-                    <Link href="/agents" className=" group-data-[collapsible=icon]:hidden text-sm mx-auto w-[45%] rounded-full flex flex-row items-center justify-center gap-2 bg-blue-500 text-white hover:bg-blue-600 h-[35px] px-4"><ArrowLeft size={16} /> Back</Link>
+                    <Link href="/agents" className=" group-data-[collapsible=icon]:hidden text-sm mx-auto w-auto rounded-full flex flex-row items-center justify-center gap-2 bg-blue-500 text-white hover:bg-blue-600 h-[35px] px-4"><ArrowLeft size={16} /> Back</Link>
                 </SidebarHeader>
                 <SidebarContent>
                     <SectionMenu
@@ -249,9 +254,9 @@ export default function MuseAgentPage() {
             </Sidebar>
 
             {/* Main Content */}
-            <main className="min-h-screen w-[80vw] min-w-0 flex-1 dark:text-white text-slate-950">
+            <main className="min-h-screen w-full min-w-0 flex-1 bg-background text-foreground">
                 {/* Breadcrumbs */}
-                <section className="flex w-full items-center border-b border-slate-200 px-6 py-4">
+                <section className={`flex w-full items-center border-b px-4 py-4 sm:px-6 ${isDark ? "border-white/10" : "border-border"}`}>
                     <div className="flex items-center gap-3">
                         <SidebarTrigger />
                         <Breadcrumb>
@@ -282,8 +287,8 @@ export default function MuseAgentPage() {
 
                 {/* key forces a full remount, so the previous section
                     is removed from the screen on every switch */}
-                <section key={activeSectionId} className="w-[90%] px-6 translate-x-[-5%] py-8">
-                    <div className="mx-auto w-[90%] mr-auto">
+                <section key={activeSectionId} className={isMobile ? "w-full px-4 py-6" : "w-full px-6 py-8"}>
+                    <div className="mx-auto w-full max-w-5xl">
                         {ActiveComponent ? (
                             <ActiveComponent />
                         ) : (

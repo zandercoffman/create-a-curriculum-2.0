@@ -267,11 +267,11 @@ export function AppSidebar() {
                             aria-label="Privacy policy and legal"
                         >
                             <a
-                                href="/privacy"
+                                href="/about"
                                 className="flex flex-col items-center justify-center gap-1"
                             >
                                 <Info className="size-4" />
-                                <span>Information</span>
+                                <span>About</span>
                             </a>
                         </Button>
                     </div>
@@ -283,7 +283,9 @@ export function AppSidebar() {
                     >
                         <span>create-a-curriculum</span>
                         <Link
-                            href="/feedback"
+                            href="https://forms.gle/VUfctXu3v6rJbaHY7"
+                            target="_blank"
+                            rel="noreferrer"
                             className="flex items-center gap-1 hover:text-foreground"
                         >
                             <MessageCircle className="size-3.5" />
@@ -586,7 +588,7 @@ export function AppSidebar() {
                                 dark:hover:text-white"
                                         >
                                             <a
-                                                href="/privacy"
+                                                href="/about"
                                                 className="flex flex-col items-center gap-2"
                                             >
                                                 <Info className="size-5" />
@@ -604,7 +606,9 @@ export function AppSidebar() {
                                         </span>
 
                                         <Link
-                                            href="/feedback"
+                                            href="https://forms.gle/VUfctXu3v6rJbaHY7"
+                                            target="_blank"
+                                            rel="noreferrer"
                                             className="flex items-center gap-1.5 rounded-full px-2.5 py-1.5
                                 text-xs font-medium text-muted-foreground
                                 transition-colors hover:bg-muted hover:text-foreground

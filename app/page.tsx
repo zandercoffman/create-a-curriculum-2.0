@@ -18,6 +18,7 @@ import { useDarkMode } from "@/lib/useDarkMode"
 import { useMobile } from "@/lib/useMobile"
 import { LiquidGlassLogo } from '@/components/liquid-glass-logo';
 import { Button } from "@/components/ui/button"
+import { blogs } from "./blog/page"
 
 
 export const FacebookFIcon = (props: React.SVGProps<SVGSVGElement>) => (
@@ -31,13 +32,14 @@ export default function Home() {
 
   const { isDark } = useDarkMode()
   const isMobile = useMobile()
+  const firstBlog = blogs[0] // TODO: replace with your current post, or tell me where the post data lives and I'll wire it;
 
   // TODO: replace with your current post, or tell me where the post data lives and I'll wire it
   const latestPost = {
-    title: "Latest post title",
-    excerpt: "One or two lines from the post.",
-    href: "/blog/latest-post-slug",
-    date: "Oct 31, 2026",
+    title: firstBlog.title,
+    excerpt: firstBlog.description,
+    href: `/blog/${firstBlog.slug}`,
+    date: firstBlog.date,
   };
 
   const quickLinks = [
@@ -207,7 +209,7 @@ export default function Home() {
                     aria-hidden="true"
                     className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-full"
                   />
-                  <span className="relative text-[14px] font-semibold">Create a Curriculum</span>
+                  <span className="relative text-[14px] dark:text-gray-300 font-semibold">Create a Curriculum</span>
                   <ArrowRight className="relative h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
                 </Link>
               </Button>

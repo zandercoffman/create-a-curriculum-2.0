@@ -1,4 +1,7 @@
 "use client"
+
+import { useMobile } from "@/lib/useMobile";
+import { useDarkMode } from "@/lib/useDarkMode";
 import Image from "next/image";
 import { Sparkles } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
@@ -118,6 +121,8 @@ function buildPrompt(f: ResourceForm, learners: LearnerProfile[]): string {
 }
 
 export default function CreateResourcePage() {
+    const isMobile = useMobile();
+    const { isDark } = useDarkMode();
     const [form, setForm] = useState<ResourceForm>(INITIAL_FORM);
     const [learners, setLearners] = useState<LearnerProfile[]>([]);
     const [copied, setCopied] = useState(false);
@@ -157,33 +162,31 @@ export default function CreateResourcePage() {
         .filter(Boolean)
         .join(" · ");
 
+    if (isMobile === null) {
+        return (
+            <div className="flex w-full items-center justify-center py-12">
+                <p className="text-sm font-semibold text-muted-foreground">
+                    Loading...
+                </p>
+            </div>
+        );
+    }
+
     return (
-        <div className="w-full mr-auto px-6 py-12">
-            <div className=" grid w-full max-w-5xl items-center gap-10 lg:grid-cols-2">
+        <div className={`w-full mr-auto ${isMobile ? "px-4 py-8" : "px-6 py-12"}`}>
+            <div className=" grid w-full max-w-5xl items-center gap-6 sm:gap-10 lg:grid-cols-2">
                 {/* Left — copy */}
                 <section className="flex flex-col items-start mr-auto gap-5">
-                    <span style={{
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: "0.5rem",
-                        borderRadius: "9999px",
-                        border: "1px solid #bfdbfe",
-                        backgroundColor: "#eff6ff",
-                        padding: "0.25rem 0.75rem",
-                        fontSize: "0.75rem",
-                        lineHeight: "1rem",
-                        fontWeight: 500,
-                        color: "#1d4ed8",
-                    }}>
+                    <span className={`inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-medium ${isDark ? "border-blue-500/30 bg-blue-500/10 text-blue-300" : "border-blue-200 bg-blue-50 text-blue-700"}`}>
                         <Sparkles size={14} />
                         Powered by Meta Muse
                     </span>
 
-                    <h1 className="text-4xl font-bold leading-tight tracking-tight">
+                    <h1 className="text-3xl font-bold leading-tight tracking-tight sm:text-4xl">
 
                         <span className="gradient-muse">Create a Resource</span>
                         <span className="mt-3 flex items-center gap-3">
-                            <span className="text-xl font-medium text-slate-500">with</span>
+                            <span className="text-xl font-medium text-muted-foreground">with</span>
                             <Image
                                 src="/AppIcons/MuseIconExportable1.png"
                                 alt="Muse"
@@ -194,7 +197,7 @@ export default function CreateResourcePage() {
                         </span>
                     </h1>
 
-                    <p className="max-w-lg text-base leading-relaxed text-slate-600">
+                    <p className="max-w-lg text-base leading-relaxed text-muted-foreground">
                         Turn a link, video, or book into a ready-to-use
                         resource. Describe it, copy the prompt into Muse, and
                         get a summary plus a plan for using it with your
@@ -239,7 +242,7 @@ export default function CreateResourcePage() {
                     />
                 </OptionSection>
                 <OptionSection title="For Whom & Level">
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className={`grid gap-4 ${isMobile ? "grid-cols-1" : "grid-cols-2"}`}>
                         <SelectField
                             id="resource-subject"
                             label="Subject area"

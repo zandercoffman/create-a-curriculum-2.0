@@ -31,7 +31,8 @@ export const betaNavs: string[] = [
   "goals",
   "learners",
   "resources",
-  "schedule"
+  "schedule",
+  "lists"
 ]
 
 export const navItems: NavItem[] = [
@@ -60,6 +61,11 @@ export const navItems: NavItem[] = [
                 label: "Plan with Products",
                 icon: ScanLine,
                 href: "/plan-with-products",
+            },
+            {
+                label: "Lists",
+                icon: GalleryHorizontalEnd,
+                href: "/lists",
             },
             {
                 label: "Agents",

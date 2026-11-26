@@ -233,12 +233,12 @@ export default function PromptsPage() {
             </CardHeader>
 
             <CardContent className="flex items-center">
-              <Button
-                size="sm"
-                className="mx-auto my-auto rounded-full bg-rose-500 px-5 text-white hover:bg-rose-600"
+              <Link
+                className="mx-auto w-max py-2 my-auto rounded-full bg-rose-500 px-5 text-white hover:bg-rose-600"
+                href="/blog/using-ai-in-education"
               >
                 Why should I care about this?
-              </Button>
+              </Link>
             </CardContent>
           </Card>
         </section>
@@ -462,9 +462,14 @@ export default function PromptsPage() {
             tab and let them handle tasks on your behalf.
           </p>
 
-          <Badge className="mx-auto mt-4 rounded-full py-4 bg-rose-100 px-6 text-sm text-rose-600">
-            Keep AI a tool, NOT a crutch. <ExternalLink className="ml-1 h-3 w-3" />
-          </Badge>
+          <Link
+            href="/blog/using-ai-in-education"
+            className="text-rose-500 hover:underline"
+          >
+            <Badge className="mx-auto mt-4 rounded-full py-4 bg-rose-100 px-6 text-sm text-rose-600">
+              Keep AI a tool, NOT a crutch. <ExternalLink className="ml-1 h-3 w-3" />
+            </Badge>
+          </Link>
 
         </section>
 

@@ -206,6 +206,210 @@ export function CurriculumLoading({
 
 
 
+
+type Learner = {
+    id: string
+    name: string
+    description: string
+    educationLevel: string
+    photo: string
+    createdAt: number
+}
+
+function LearnerPicker({
+    learners,
+    selectedLearnerId,
+    onSelect,
+}: {
+    learners: Learner[]
+    selectedLearnerId: string | null
+    onSelect: (learner: Learner | null) => void
+}) {
+    if (learners.length === 0) {
+        return (
+            <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
+                No learners yet. Create a learner on the Learners page first,
+                then you can pick them here to personalize the prompt.
+            </p>
+        )
+    }
+
+    return (
+        <div className="mt-3 max-h-72 space-y-2 overflow-y-auto pr-1">
+            {learners.map((learner) => {
+                const selected = learner.id === selectedLearnerId
+
+                return (
+                    <button
+                        key={learner.id}
+                        type="button"
+                        onClick={() => onSelect(selected ? null : learner)}
+                        className={
+                            selected
+                                ? "flex w-full items-center gap-3 rounded-xl border border-rose-300 bg-rose-50 p-2.5 text-left dark:border-rose-500/40 dark:bg-rose-500/10"
+                                : "flex w-full items-center gap-3 rounded-xl border border-border p-2.5 text-left transition-colors hover:bg-accent/60"
+                        }
+                    >
+                        <img
+                            src={learner.photo}
+                            alt={learner.name}
+                            className="h-10 w-10 shrink-0 rounded-full object-cover"
+                        />
+                        <span className="min-w-0 flex-1">
+                            <span className="block truncate text-sm font-medium text-foreground">
+                                {learner.name}
+                            </span>
+                            <span className="block truncate text-xs text-muted-foreground">
+                                {learner.educationLevel}
+                                {learner.description
+                                    ? ` \u00b7 ${learner.description}`
+                                    : ""}
+                            </span>
+                        </span>
+                        {selected ? (
+                            <CheckCircle2 className="size-5 shrink-0 text-rose-500" />
+                        ) : (
+                            <Circle className="size-5 shrink-0 text-muted-foreground/40" />
+                        )}
+                    </button>
+                )
+            })}
+
+            {selectedLearnerId && (
+                <p className="pt-1 text-xs text-muted-foreground">
+                    This student will be included in the prompt. Tap them again
+                    to clear the selection.
+                </p>
+            )}
+        </div>
+    )
+}
+
+
+function ImagesPanel({
+    images,
+    previews,
+    formatFileSize,
+    onAddFiles,
+    onRemove,
+    onClear,
+    inputId,
+}: {
+    images: File[]
+    previews: string[]
+    formatFileSize: (bytes: number) => string
+    onAddFiles: (files: FileList | File[]) => void
+    onRemove: (index: number) => void
+    onClear: () => void
+    inputId: string
+}) {
+    const [isDragging, setIsDragging] = React.useState(false)
+
+    return (
+        <div>
+            <input
+                id={inputId}
+                type="file"
+                accept="image/jpeg,image/jpg,image/png,image/webp,image/gif"
+                multiple
+                className="hidden"
+                onChange={(event) => {
+                    onAddFiles(event.target.files || [])
+                    event.target.value = ""
+                }}
+            />
+
+            <button
+                type="button"
+                onClick={() => document.getElementById(inputId)?.click()}
+                onDragOver={(event) => {
+                    event.preventDefault()
+                    setIsDragging(true)
+                }}
+                onDragLeave={() => setIsDragging(false)}
+                onDrop={(event) => {
+                    event.preventDefault()
+                    setIsDragging(false)
+                    onAddFiles(event.dataTransfer.files)
+                }}
+                className={cn(
+                    "flex w-full flex-col items-center justify-center gap-1.5 rounded-2xl border-2 border-dashed px-4 py-6 text-center transition-colors",
+                    isDragging
+                        ? "border-rose-400 bg-rose-50 dark:bg-rose-500/10"
+                        : "border-border bg-muted/30 hover:border-rose-300 hover:bg-rose-50/60 dark:hover:bg-rose-500/5"
+                )}
+            >
+                <span className="flex size-10 items-center justify-center rounded-full bg-rose-100 text-rose-500 dark:bg-rose-500/15">
+                    <Images className="size-5" />
+                </span>
+                <span className="text-sm font-medium text-foreground">
+                    {images.length === 0
+                        ? "Drop images here, or tap to upload"
+                        : "Add more images"}
+                </span>
+                <span className="text-xs leading-relaxed text-muted-foreground">
+                    PNG, JPG, WebP or GIF. They get summarized and included
+                    with your prompt.
+                </span>
+            </button>
+
+            {images.length > 0 && (
+                <>
+                    <div className="mt-4 flex items-center justify-between px-0.5">
+                        <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                            {images.length}{" "}
+                            {images.length === 1 ? "image" : "images"} attached
+                        </p>
+                        <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            onClick={onClear}
+                            className="h-7 gap-1.5 rounded-full px-2.5 text-xs text-muted-foreground hover:text-destructive"
+                        >
+                            <Trash2 className="size-3.5" />
+                            Clear all
+                        </Button>
+                    </div>
+
+                    <div className="mt-2 grid max-h-64 grid-cols-3 gap-2.5 overflow-y-auto pr-1">
+                        {images.map((image, index) => (
+                            <div
+                                key={`${image.name}-${image.lastModified}-${index}`}
+                                className="group min-w-0"
+                            >
+                                <div className="relative overflow-hidden rounded-xl ring-1 ring-border">
+                                    <img
+                                        src={previews[index]}
+                                        alt={image.name}
+                                        className="aspect-square w-full object-cover"
+                                    />
+                                    <Button
+                                        type="button"
+                                        variant="ghost"
+                                        size="icon"
+                                        aria-label={`Remove ${image.name}`}
+                                        onClick={() => onRemove(index)}
+                                        className="absolute right-1.5 top-1.5 h-6 w-6 rounded-full bg-black/60 text-white backdrop-blur transition-opacity hover:bg-black/80 hover:text-white lg:opacity-0 lg:group-hover:opacity-100"
+                                    >
+                                        <X className="h-3.5 w-3.5" />
+                                    </Button>
+                                </div>
+                                <p className="mt-1 truncate text-[11px] leading-tight">
+                                    {image.name}
+                                </p>
+                                <p className="text-[11px] tabular-nums leading-tight text-muted-foreground">
+                                    {formatFileSize(image.size)}
+                                </p>
+                            </div>
+                        ))}
+                    </div>
+                </>
+            )}
+        </div>
+    )
+}
+
 export default function CurriculumsPage() {
     const [chosenAIModel, setChosenAIModel] =
         React.useState<TextAIModel>(textAIs[0])
@@ -225,17 +429,42 @@ export default function CurriculumsPage() {
 
     const [images, setImages] = React.useState<File[]>([])
 
-    const handleImageUpload = (
-        event: React.ChangeEvent<HTMLInputElement>
-    ) => {
-        const files = Array.from(event.target.files || [])
+    // Preview URLs are derived from the files, not stored in state:
+    // useMemo rebuilds them only when the image set changes, and the
+    // effect below only revokes the old set in its cleanup (no setState
+    // in the effect body, so no cascading renders).
+    const imagePreviews = React.useMemo(
+        () => images.map((image) => URL.createObjectURL(image)),
+        [images]
+    )
 
+    React.useEffect(() => {
+        return () => {
+            imagePreviews.forEach((url) => URL.revokeObjectURL(url))
+        }
+    }, [imagePreviews])
+
+    const addImageFiles = (files: FileList | File[]) => {
         // Only allow images
-        const imageFiles = files.filter((file) =>
+        const imageFiles = Array.from(files).filter((file) =>
             file.type.startsWith("image/")
         )
 
-        setImages((prev) => [...prev, ...imageFiles])
+        if (imageFiles.length > 0) {
+            setImages((prev) => [...prev, ...imageFiles])
+        }
+    }
+
+    const handleImageUpload = (
+        event: React.ChangeEvent<HTMLInputElement>
+    ) => {
+        addImageFiles(event.target.files || [])
+        // Reset so picking the same file again still fires onChange
+        event.target.value = ""
+    }
+
+    const clearImages = () => {
+        setImages([])
     }
 
     const removeImage = (index: number) => {
@@ -264,6 +493,13 @@ export default function CurriculumsPage() {
         curriculum: string
     }[]>([])
 
+    const [learners, setLearners] = React.useState<Learner[]>([])
+    const [selectedLearnerId, setSelectedLearnerId] =
+        React.useState<string | null>(null)
+
+    const selectedLearner =
+        learners.find((learner) => learner.id === selectedLearnerId) ?? null
+
 
     React.useEffect(() => {
         async function loadCurriculums() {
@@ -290,8 +526,18 @@ export default function CurriculumsPage() {
             }
         }
 
+        async function loadLearners() {
+            const storedLearners =
+                await retrieveItemFromIndexedDB<Learner[]>("learners")
+
+            if (storedLearners) {
+                setLearners(storedLearners)
+            }
+        }
+
         loadCurriculums()
         loadAgentCurriculums()
+        loadLearners()
     }, [])
 
 
@@ -301,6 +547,10 @@ export default function CurriculumsPage() {
     ) => {
         setThisPrompt(prompt)
         setIsLoading(true)
+
+        if (selectedLearner) {
+            prompt += `\n\nPersonalize this curriculum for this student:\n- Name: ${selectedLearner.name}\n- Education level: ${selectedLearner.educationLevel}\n- About this student: ${selectedLearner.description}\n\nTailor the examples, reading level, pacing, activities, and assessments to this student. Refer to the student by name where it fits naturally.`
+        }
 
 
         if (images.length > 0) {
@@ -520,83 +770,24 @@ export default function CurriculumsPage() {
                                             transition={{ duration: 0.18, ease: "easeOut" }}
                                             className="absolute top-[65px] z-50 w-[35rem] max-w-[calc(100vw-2rem)] -translate-x-[5%] rounded-2xl border border-border bg-popover/95 p-5 text-popover-foreground shadow-2xl backdrop-blur-xl"
                                         >
-                                            <section className="flex items-start justify-between gap-4 px-1.5">
-                                                <section className="flex flex-col gap-0.5">
-                                                    <p className="font-semibold text-foreground">Add Images</p>
-                                                    <p className="text-xs text-muted-foreground">
-                                                        Add images to help personalize your curriculum.
-                                                    </p>
-                                                </section>
-
-                                                {/* Hidden file input */}
-                                                <input
-                                                    id="image-upload"
-                                                    type="file"
-                                                    accept="image/jpeg,image/jpg,image/png,image/webp,image/gif"
-                                                    multiple
-                                                    className="hidden"
-                                                    onChange={handleImageUpload}
-                                                />
-
-                                                {/* Upload button */}
-                                                <Button
-                                                    type="button"
-                                                    size="sm"
-                                                    className="shrink-0 gap-2 rounded-xl"
-                                                    onClick={() =>
-                                                        document.getElementById("image-upload")?.click()
-                                                    }
-                                                >
-                                                    <Upload className="h-4 w-4" />
-                                                    Upload
-                                                </Button>
+                                            <section className="flex flex-col gap-0.5 px-1.5">
+                                                <p className="font-semibold text-foreground">Add Images</p>
+                                                <p className="text-xs text-muted-foreground">
+                                                    Add images to help personalize your curriculum.
+                                                </p>
                                             </section>
 
-                                            {images.length > 0 && (
-                                                <Carousel className="relative mt-5 w-full px-10">
-                                                    <CarouselContent>
-                                                        {images.map((image, index) => (
-                                                            <CarouselItem
-                                                                key={`${image.name}-${index}`}
-                                                                className="basis-full"
-                                                            >
-                                                                <div className="flex flex-col items-center gap-3">
-                                                                    <img
-                                                                        src={URL.createObjectURL(image)}
-                                                                        alt={image.name}
-                                                                        className="max-h-60 w-auto max-w-full rounded-xl object-contain"
-                                                                    />
-                                                                    <div className="flex w-full items-center gap-2">
-                                                                        <p className="min-w-0 flex-1 truncate text-sm">
-                                                                            {image.name}
-                                                                        </p>
-                                                                        <p className="shrink-0 text-xs tabular-nums text-muted-foreground">
-                                                                            {formatFileSize(image.size)}
-                                                                        </p>
-                                                                        <Button
-                                                                            type="button"
-                                                                            variant="ghost"
-                                                                            size="icon"
-                                                                            aria-label={`Remove ${image.name}`}
-                                                                            onClick={() => removeImage(index)}
-                                                                            className="h-7 w-7 shrink-0 rounded-full"
-                                                                        >
-                                                                            <X className="h-4 w-4" />
-                                                                        </Button>
-                                                                    </div>
-                                                                </div>
-                                                            </CarouselItem>
-                                                        ))}
-                                                    </CarouselContent>
-
-                                                    {images.length > 1 && (
-                                                        <>
-                                                            <CarouselPrevious className="left-0" />
-                                                            <CarouselNext className="right-0" />
-                                                        </>
-                                                    )}
-                                                </Carousel>
-                                            )}
+                                            <div className="mt-4">
+                                                <ImagesPanel
+                                                    images={images}
+                                                    previews={imagePreviews}
+                                                    formatFileSize={formatFileSize}
+                                                    onAddFiles={addImageFiles}
+                                                    onRemove={removeImage}
+                                                    onClear={clearImages}
+                                                    inputId="image-upload"
+                                                />
+                                            </div>
                                         </motion.div>
                                     )}
                                 </AnimatePresence>
@@ -629,6 +820,11 @@ export default function CurriculumsPage() {
                                         className="relative shadow-xl size-14 rounded-full flex flex-col gap-0 text-white bg-[linear-gradient(45deg,#ff6b6b,#f06595)] font-medium"
                                     >
                                         <Images className="size-6" />
+                                        {images.length > 0 && (
+                                            <span className="absolute -right-1 -top-1 z-10 flex h-5 min-w-5 items-center justify-center rounded-full bg-foreground px-1 text-[11px] font-semibold text-background ring-2 ring-background">
+                                                {images.length}
+                                            </span>
+                                        )}
                                         <p className="absolute text-foreground text-xs top-[60px]">
                                             Images
                                         </p>
@@ -712,15 +908,23 @@ export default function CurriculumsPage() {
                                                     stiffness: 400,
                                                     damping: 25,
                                                 }}
-                                                className="absolute top-[65px] left-1/2 z-50 w-56 -translate-x-1/2 rounded-2xl border border-border bg-popover/95 text-popover-foreground p-4 shadow-2xl backdrop-blur-xl"
+                                                className="absolute top-[65px] left-1/2 z-50 w-[22rem] max-w-[calc(100vw-2rem)] -translate-x-1/2 rounded-2xl border border-border bg-popover/95 text-popover-foreground p-4 shadow-2xl backdrop-blur-xl"
                                             >
                                                 <p className="font-semibold text-foreground">
                                                     Personalization
                                                 </p>
                                                 <p className="mt-1 text-xs text-muted-foreground">
-                                                    Customize grade level, learning style, difficulty,
-                                                    and more.
+                                                    Pick a student to include in the prompt.
                                                 </p>
+                                                <LearnerPicker
+                                                    learners={learners}
+                                                    selectedLearnerId={selectedLearnerId}
+                                                    onSelect={(learner) =>
+                                                        setSelectedLearnerId(
+                                                            learner ? learner.id : null
+                                                        )
+                                                    }
+                                                />
                                             </motion.div>
                                         )}
                                     </AnimatePresence>
@@ -777,6 +981,19 @@ export default function CurriculumsPage() {
                             className="w-full max-w-3xl mx-auto"
                             shellClassName="shadow-xl bg-background/80 border border-border backdrop-blur-md"
                         />
+                        {selectedLearner && (
+                            <div className="mt-2 ml-2 mr-auto">
+                                <Badge variant="secondary" className="gap-1.5 text-xs">
+                                    <CircleUserRound className="size-3.5" />
+                                    For: {selectedLearner.name} ·{" "}
+                                    {selectedLearner.educationLevel}
+                                    <X
+                                        className="size-3.5 cursor-pointer"
+                                        onClick={() => setSelectedLearnerId(null)}
+                                    />
+                                </Badge>
+                            </div>
+                        )}
                         <Carousel className="w-xl mr-auto ml-2 flex flex-row gap-2 mt-2">
                             <CarouselContent>
                                 {
@@ -1092,94 +1309,6 @@ export default function CurriculumsPage() {
                     className="flex flex-row gap-14 w-[90%] mx-auto justify-center items-center mt-4">
                     {/* Images */}
                     <div className="relative">
-                        <AnimatePresence>
-                            {activePopup === "images" && (
-                                <motion.div
-                                    initial={{ opacity: 0, scale: 0.75, x: -20, y: -20 }}
-                                    animate={{ opacity: 1, scale: 1, x: 0, y: 0 }}
-                                    exit={{ opacity: 0, scale: 0.9, x: 15, y: 15 }}
-                                    transition={{
-                                        type: "spring",
-                                        stiffness: 400,
-                                        damping: 25,
-                                    }}
-                                    style={{
-                                        height: images.length == 0 ? "90px" : "450px",
-                                    }}
-                                    className="absolute top-[65px] z-50 w-[35rem] -translate-x-[5%] rounded-2xl border border-border bg-popover/95 text-popover-foreground p-4 shadow-2xl backdrop-blur-xl"
-                                >
-                                    <section className="flex flex-row gap-2 justify-between items-center px-1.5">
-                                        <section className="flex flex-col gap-1">
-                                            <p className="font-semibold text-foreground">
-                                                Add Images
-                                            </p>
-
-                                            <p className="mt-1 text-xs text-muted-foreground">
-                                                Add images to help personalize your curriculum.
-                                            </p>
-                                        </section>
-
-                                        {/* Hidden file input */}
-                                        <input
-                                            id="image-upload"
-                                            type="file"
-                                            accept="image/jpeg,image/jpg,image/png,image/webp,image/gif"
-                                            multiple
-                                            className="hidden"
-                                            onChange={handleImageUpload}
-                                        />
-
-                                        {/* Upload button */}
-                                        <Button
-                                            type="button"
-                                            className="rounded-xl  *:hover:bg-card/50 transition-all duration-300 ease-in-out"
-                                            onClick={() =>
-                                                document.getElementById("image-upload")?.click()
-                                            }
-                                        >
-                                            <Upload className="w-4 h-4 ml-2" />
-                                            <span className="mr-2">Upload</span>
-                                        </Button>
-                                    </section>
-
-                                    {
-                                        images.length > 0 && <Carousel className="mt-4 w-[85%] mx-auto">
-                                            <CarouselContent className="flex gap-4 mt-4">
-                                                {images.map((image, index) => (
-                                                    <CarouselItem
-                                                        key={`${image.name}-${index}`}
-                                                        className="relative w-auto basis-auto shrink-0 rounded-lg overflow-hidden"
-                                                    >
-                                                        <img
-                                                            src={URL.createObjectURL(image)}
-                                                            alt={image.name}
-                                                            className="w-auto mx-auto h-auto max-h-60 object-contain rounded-3xl"
-                                                        />
-                                                        <Badge variant="outline" className=" mt-[10px] mx-auto text-sm">
-                                                            <X className="w-4 h-4 hover:cursor-pointer" /> {image.name}
-                                                        </Badge>
-                                                        {image.size > 0 && (
-                                                            <p className="text-xs text-left text-muted-foreground mt-1">
-                                                                {(image.size / 1024).toFixed(2)} KB
-                                                            </p>
-                                                        )}
-                                                    </CarouselItem>
-                                                ))}
-                                            </CarouselContent>
-
-                                            {images.length > 0 && (
-                                                <>
-                                                    <CarouselPrevious />
-                                                    <CarouselNext />
-                                                </>
-                                            )}
-                                        </Carousel>
-                                    }
-
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
-
                         <motion.div
                             whileHover={{ scale: 1.08, y: 7 }}
                             whileTap={{ scale: 0.9 }}
@@ -1207,6 +1336,11 @@ export default function CurriculumsPage() {
                                 className="relative shadow-xl size-14 rounded-full flex flex-col gap-0 text-white bg-[linear-gradient(45deg,#ff6b6b,#f06595)] font-medium"
                             >
                                 <Images className="size-6" />
+                                        {images.length > 0 && (
+                                            <span className="absolute -right-1 -top-1 z-10 flex h-5 min-w-5 items-center justify-center rounded-full bg-foreground px-1 text-[11px] font-semibold text-background ring-2 ring-background">
+                                                {images.length}
+                                            </span>
+                                        )}
                                 <p className="absolute text-foreground text-xs top-[60px]">
                                     Images
                                 </p>
@@ -1216,30 +1350,6 @@ export default function CurriculumsPage() {
 
                     {/* Lists */}
                     <div className="relative">
-                        <AnimatePresence>
-                            {activePopup === "lists" && (
-                                <motion.div
-                                    initial={{ opacity: 0, scale: 0.85, x: 8, y: 8 }}
-                                    animate={{ opacity: 1, scale: 1, x: 0, y: 0 }}
-                                    exit={{ opacity: 0, scale: 0.9, x: 5, y: 6 }}
-                                    transition={{
-                                        type: "spring",
-                                        stiffness: 400,
-                                        damping: 25,
-                                    }}
-                                    className="absolute top-[65px] left-1/2 z-50 w-52 -translate-x-1/2 rounded-2xl border border-border bg-popover/95 text-popover-foreground p-4 shadow-2xl backdrop-blur-xl"
-                                >
-                                    <p className="font-semibold text-foreground">
-                                        Add Lists
-                                    </p>
-                                    <p className="mt-1 text-xs text-muted-foreground">
-                                        Add lists, resources, or collections to your
-                                        curriculum.
-                                    </p>
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
-
                         <motion.div
                             whileHover={{ scale: 1.08 }}
                             whileTap={{ scale: 0.9 }}
@@ -1276,30 +1386,6 @@ export default function CurriculumsPage() {
 
                     {/* Personalization */}
                     <div className="relative">
-                        <AnimatePresence>
-                            {activePopup === "personalization" && (
-                                <motion.div
-                                    initial={{ opacity: 0, scale: 0.85, x: 8, y: 8 }}
-                                    animate={{ opacity: 1, scale: 1, x: 0, y: 0 }}
-                                    exit={{ opacity: 0, scale: 0.9, x: 5, y: 6 }}
-                                    transition={{
-                                        type: "spring",
-                                        stiffness: 400,
-                                        damping: 25,
-                                    }}
-                                    className="absolute top-[65px] left-1/2 z-50 w-56 -translate-x-1/2 rounded-2xl border border-border bg-popover/95 text-popover-foreground p-4 shadow-2xl backdrop-blur-xl"
-                                >
-                                    <p className="font-semibold text-foreground">
-                                        Personalization
-                                    </p>
-                                    <p className="mt-1 text-xs text-muted-foreground">
-                                        Customize grade level, learning style, difficulty,
-                                        and more.
-                                    </p>
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
-
                         <motion.div
                             whileHover={{ scale: 1.08, y: 7 }}
                             whileTap={{ scale: 0.9 }}
@@ -1336,6 +1422,105 @@ export default function CurriculumsPage() {
                         </motion.div>
                     </div>
                 </section>
+                                {/* Mobile: Images / Lists / Personalization as shadcn Drawers */}
+                <Drawer
+                    open={activePopup === "images"}
+                    onOpenChange={(isOpen) => {
+                        if (!isOpen) setActivePopup(null)
+                    }}
+                >
+                    <DrawerContent className="max-h-[85vh]">
+                        <DrawerHeader className="text-left">
+                            <DrawerTitle>Add Images</DrawerTitle>
+                            <DrawerDescription>
+                                Add images to help personalize your curriculum.
+                            </DrawerDescription>
+                        </DrawerHeader>
+
+                        <div className="overflow-y-auto px-4 pb-4">
+                            <ImagesPanel
+                                images={images}
+                                previews={imagePreviews}
+                                formatFileSize={formatFileSize}
+                                onAddFiles={addImageFiles}
+                                onRemove={removeImage}
+                                onClear={clearImages}
+                                inputId="image-upload-mobile"
+                            />
+                        </div>
+
+                        <DrawerFooter>
+                            <DrawerClose render={<Button variant="outline" className="w-full rounded-full py-6" />}>
+                                {images.length > 0 ? `Done (${images.length})` : "Close"}
+                            </DrawerClose>
+                        </DrawerFooter>
+                    </DrawerContent>
+                </Drawer>
+
+                <Drawer
+                    open={activePopup === "lists"}
+                    onOpenChange={(isOpen) => {
+                        if (!isOpen) setActivePopup(null)
+                    }}
+                >
+                    <DrawerContent className="max-h-[85vh]">
+                        <DrawerHeader className="text-left">
+                            <DrawerTitle>Add Lists</DrawerTitle>
+                            <DrawerDescription>
+                                Add lists, resources, or collections to your
+                                curriculum.
+                            </DrawerDescription>
+                        </DrawerHeader>
+
+                        <div className="overflow-y-auto px-4 pb-4">
+                            <p className="text-sm text-muted-foreground">
+                                Add lists, resources, or collections to your
+                                curriculum.
+                            </p>
+                        </div>
+
+                        <DrawerFooter>
+                            <DrawerClose render={<Button variant="outline" className="w-full rounded-full py-6" />}>
+                                Close
+                            </DrawerClose>
+                        </DrawerFooter>
+                    </DrawerContent>
+                </Drawer>
+
+                <Drawer
+                    open={activePopup === "personalization"}
+                    onOpenChange={(isOpen) => {
+                        if (!isOpen) setActivePopup(null)
+                    }}
+                >
+                    <DrawerContent className="max-h-[85vh]">
+                        <DrawerHeader className="text-left">
+                            <DrawerTitle>Personalization</DrawerTitle>
+                            <DrawerDescription>
+                                Pick a student to include in the prompt.
+                            </DrawerDescription>
+                        </DrawerHeader>
+
+                        <div className="overflow-y-auto px-4 pb-4">
+                            <LearnerPicker
+                                learners={learners}
+                                selectedLearnerId={selectedLearnerId}
+                                onSelect={(learner) =>
+                                    setSelectedLearnerId(
+                                        learner ? learner.id : null
+                                    )
+                                }
+                            />
+                        </div>
+
+                        <DrawerFooter>
+                            <DrawerClose render={<Button variant="outline" className="w-full rounded-full py-6" />}>
+                                Done
+                            </DrawerClose>
+                        </DrawerFooter>
+                    </DrawerContent>
+                </Drawer>
+
                 <AITextbox
                     placeholder="Create a curriculum on any topic..."
                     collapsedWidth={500}
@@ -1348,6 +1533,19 @@ export default function CurriculumsPage() {
                     className=" justify-center flex mx-auto"
                     shellClassName="shadow-xl bg-background/80 border border-border backdrop-blur-md"
                 />
+                {selectedLearner && (
+                    <div className="flex justify-center">
+                        <Badge variant="secondary" className="gap-1.5 text-xs">
+                            <CircleUserRound className="size-3.5" />
+                            For: {selectedLearner.name} ·{" "}
+                            {selectedLearner.educationLevel}
+                            <X
+                                className="size-3.5 cursor-pointer"
+                                onClick={() => setSelectedLearnerId(null)}
+                            />
+                        </Badge>
+                    </div>
+                )}
 
 
             </section>

@@ -1,5 +1,9 @@
+"use client";
+
 import { nofex } from "@/lib/fonts";
 import { cn } from "@/lib/utils";
+import { useMobile } from "@/lib/useMobile";
+import { useDarkMode } from "@/lib/useDarkMode";
 
 import {
   Card,
@@ -28,7 +32,7 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { ColorGradient } from "@/components/NameGradient";
 
 const ext =  <>
-        <section className="flex flex-col gap-4 mt-[10vh]">
+        <section className="mt-10 flex flex-col gap-4 sm:mt-[10vh]">
           <div className="flex flex-col gap-1">
             <p className="flex items-center gap-2 text-sm font-semibold text-foreground/80">
               <Sparkles size={16} />
@@ -63,8 +67,8 @@ const ext =  <>
             </div>
 
             {/* Step 2 */}
-            <div className="flex flex-col gap-3 rounded-[28px] border bg-white p-6">
-              <div className="flex size-11 items-center justify-center rounded-2xl bg-rose-100 text-rose-500">
+            <div className="flex flex-col gap-3 rounded-[28px] border bg-card p-6 text-card-foreground">
+              <div className="flex size-11 items-center justify-center rounded-2xl bg-rose-100 text-rose-500 dark:bg-rose-500/15">
                 <Layers2 size={20} />
               </div>
               <div>
@@ -77,21 +81,21 @@ const ext =  <>
                 </p>
               </div>
               <div className="mt-auto flex flex-wrap gap-1">
-                <span className="rounded-full bg-rose-50 px-2 py-1 text-[10px] text-rose-600">
+                <span className="rounded-full bg-rose-50 px-2 py-1 text-[10px] text-rose-600 dark:bg-rose-500/10 dark:text-rose-300">
                   Research
                 </span>
-                <span className="rounded-full bg-rose-50 px-2 py-1 text-[10px] text-rose-600">
+                <span className="rounded-full bg-rose-50 px-2 py-1 text-[10px] text-rose-600 dark:bg-rose-500/10 dark:text-rose-300">
                   Compare
                 </span>
-                <span className="rounded-full bg-rose-50 px-2 py-1 text-[10px] text-rose-600">
+                <span className="rounded-full bg-rose-50 px-2 py-1 text-[10px] text-rose-600 dark:bg-rose-500/10 dark:text-rose-300">
                   Organize
                 </span>
               </div>
             </div>
 
             {/* Step 3 */}
-            <div className="flex flex-col gap-3 rounded-[28px] border bg-white p-6">
-              <div className="flex size-11 items-center justify-center rounded-2xl bg-rose-100 text-rose-500">
+            <div className="flex flex-col gap-3 rounded-[28px] border bg-card p-6 text-card-foreground">
+              <div className="flex size-11 items-center justify-center rounded-2xl bg-rose-100 text-rose-500 dark:bg-rose-500/15">
                 <Search size={20} />
               </div>
               <div>
@@ -103,15 +107,15 @@ const ext =  <>
                   It searches for information, reads sources, and synthesizes findings.
                 </p>
               </div>
-              <div className="mt-auto flex items-center gap-1 rounded-full border bg-white px-3 py-1.5 text-[10px] text-foreground/60 shadow-sm">
+              <div className="mt-auto flex items-center gap-1 rounded-full border bg-card px-3 py-1.5 text-[10px] text-foreground/60 shadow-sm">
                 <Search size={11} />
                 Finding resources...
               </div>
             </div>
 
             {/* Step 4 */}
-            <div className="flex flex-col gap-3 rounded-[28px] border bg-white p-6">
-              <div className="flex size-11 items-center justify-center rounded-2xl bg-rose-100 text-rose-500">
+            <div className="flex flex-col gap-3 rounded-[28px] border bg-card p-6 text-card-foreground">
+              <div className="flex size-11 items-center justify-center rounded-2xl bg-rose-100 text-rose-500 dark:bg-rose-500/15">
                 <ShoppingBag size={20} />
               </div>
               <div>
@@ -124,20 +128,20 @@ const ext =  <>
                 </p>
               </div>
               <div className="mt-auto flex flex-wrap gap-1">
-                <span className="rounded-full border bg-white px-2 py-1 text-[10px]">
+                <span className="rounded-full border bg-card px-2 py-1 text-[10px]">
                   Web
                 </span>
-                <span className="rounded-full border bg-white px-2 py-1 text-[10px]">
+                <span className="rounded-full border bg-card px-2 py-1 text-[10px]">
                   Data
                 </span>
-                <span className="rounded-full border bg-white px-2 py-1 text-[10px]">
+                <span className="rounded-full border bg-card px-2 py-1 text-[10px]">
                   Social Media
                 </span>
               </div>
             </div>
 
             {/* Step 5 */}
-            <div className="flex flex-col gap-3 rounded-[28px] border bg-white p-6">
+            <div className="flex flex-col gap-3 rounded-[28px] border bg-card p-6 text-card-foreground">
               <div className="flex size-11 items-center justify-center rounded-2xl bg-rose-500 text-white shadow-lg shadow-rose-500/20">
                 <Sparkles size={20} />
               </div>
@@ -159,12 +163,12 @@ const ext =  <>
           </div>
 
           {/* Bottom explanation */}
-          <Card className="relative overflow-hidden rounded-[35px] border bg-gradient-to-br from-white via-white to-rose-50/40 p-6">
+          <Card className="relative overflow-hidden rounded-[35px] border bg-gradient-to-br from-card via-card to-rose-50/40 dark:to-rose-950/30 p-6">
             <div className="pointer-events-none absolute -right-20 -top-20 size-64 rounded-full bg-rose-500/5 blur-3xl" />
             <div className="pointer-events-none absolute -bottom-20 -left-20 size-64 rounded-full bg-pink-500/5 blur-3xl" />
 
-            <div className="relative flex flex-col gap-3 rounded-3xl border bg-white/70 p-5 backdrop-blur-sm md:flex-row md:items-center">
-              <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-rose-50 text-rose-500">
+            <div className="relative flex flex-col gap-3 rounded-3xl border bg-card/70 p-5 backdrop-blur-sm md:flex-row md:items-center">
+              <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-rose-50 text-rose-500 dark:bg-rose-500/15">
                 <Info size={18} />
               </div>
 
@@ -186,20 +190,149 @@ const ext =  <>
         </section></>
 
 export default function AgentsPage() {
+    const isMobile = useMobile();
+    const { isDark } = useDarkMode();
+  if (isMobile === null) {
+    return (
+      <section className="flex min-h-[50vh] w-full items-center justify-center">
+        <p className="text-sm font-semibold text-muted-foreground">Loading...</p>
+      </section>
+    );
+  }
+
+  if (isMobile) {
+    return (
+      <main className="relative z-0 mx-auto flex min-h-[95vh] w-full min-w-0 max-w-[100dvw] flex-col gap-4 overflow-x-clip px-4 pb-32 pt-6 text-foreground">
+
+        {/* ── Hero (mobile: content in normal flow, nothing absolute) ── */}
+        <section className="relative w-full min-w-0 overflow-hidden rounded-[28px] bg-[linear-gradient(150deg,#fb7185_0%,#f06565_45%,#be3455_100%)] text-white shadow-lg">
+          <div className="relative z-10 flex w-full min-w-0 flex-col gap-3 px-5 py-6">
+            <h1 className={cn("flex items-center gap-2.5 text-4xl font-semibold leading-none text-white", nofex.className)}>
+              <HatGlasses className="size-8 shrink-0" />
+              Agents
+            </h1>
+            <p className="w-full min-w-0 text-sm leading-6 text-white">
+              AI systems that take a goal, break it into steps, research information,
+              use tools, and complete tasks with significantly less manual work. They
+              can help you research products, compare resources, build curriculums,
+              and more.
+            </p>
+          </div>
+        </section>
+
+        {/* ── Disclaimer ── */}
+        <div className={cn("flex w-full min-w-0 items-start gap-2 rounded-2xl border p-4", isDark ? "border-white/10 bg-white/5" : "border-border bg-muted/50")}>
+          <Info className="mt-0.5 size-4 shrink-0" />
+          <p className="min-w-0 text-xs leading-5 text-muted-foreground">
+            Companies, brands, products, and platforms mentioned are
+            for educational purposes only. None endorse, sponsor, partner with,
+            or are affiliated with create-a-curriculum.vercel.app unless
+            explicitly stated. References do not imply recommendation or
+            approval.
+          </p>
+        </div>
+
+        {/* ── Quick Shortcuts (mobile: native horizontal scroll, no ScrollArea) ── */}
+        <section className="flex w-full min-w-0 flex-col gap-2">
+          <p className="flex items-center gap-2 text-sm font-semibold text-foreground/80">
+            <Layers2 size={16} />
+            Quick Shortcuts
+          </p>
+          <div className="-mx-4 overflow-x-auto px-4 pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <div className="flex w-max flex-row gap-2">
+              <Button variant="outline" className="shrink-0 whitespace-nowrap rounded-full px-5 py-4">
+                <Upload size={16} />
+                Upload Agent-Made Curriculum
+              </Button>
+              <Button variant="outline" className="shrink-0 whitespace-nowrap rounded-full px-5 py-4">
+                <Sparkles size={16} />
+                Create Curriculum with an Agent
+              </Button>
+              <Button variant="outline" className="shrink-0 whitespace-nowrap rounded-full px-5 py-4">
+                <Search size={16} />
+                Research a Topic
+              </Button>
+              <Button variant="outline" className="shrink-0 whitespace-nowrap rounded-full px-5 py-4">
+                <ShoppingBag size={16} />
+                Product Research
+              </Button>
+              <Button variant="outline" className="shrink-0 whitespace-nowrap rounded-full px-5 py-4">
+                <GalleryHorizontalEnd size={16} />
+                Create a Product List
+              </Button>
+              <Button variant="outline" className="shrink-0 whitespace-nowrap rounded-full px-5 py-4">
+                <BellRing size={16} />
+                Remind Me
+              </Button>
+            </div>
+          </div>
+        </section>
+
+        {/* ── Agents (mobile: single full-width card, no Carousel) ── */}
+        <section className="flex w-full min-w-0 flex-col gap-2">
+          <p className="flex items-center gap-2 text-sm font-semibold text-foreground/80">
+            <HatGlasses size={16} />
+            Agents
+          </p>
+
+          <Card className="group relative h-[24rem] w-full min-w-0 overflow-hidden rounded-[32px] border-2 ring-1 ring-white/10">
+            <video
+              src="/showcaseVideos/Agents/muse.mp4"
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+
+            <span className="absolute left-4 top-4 rounded-full bg-black/35 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-white backdrop-blur-md">
+              AI Agent by Meta
+            </span>
+
+            <div className="absolute inset-x-4 bottom-4 flex flex-col items-start gap-3">
+              <div className="flex min-w-0 items-center gap-3">
+                <Image
+                  src="/AppIcons/muse.webp"
+                  alt="Muse"
+                  width={56}
+                  height={56}
+                  className="size-12 shrink-0 rounded-2xl object-cover shadow-2xl ring-1 ring-white/25"
+                />
+                <div className="min-w-0">
+                  <h3 className="truncate text-lg font-semibold text-white">Muse</h3>
+                  <p className="truncate text-[13px] text-white/85">
+                    Built-in browser for research, creation, and goals
+                  </p>
+                </div>
+              </div>
+              <Link
+                href="/agents/muse"
+                className="w-full rounded-full bg-rose-500 px-5 py-2.5 text-center font-medium text-white shadow-lg shadow-black/25 hover:bg-rose-600"
+              >
+                Start Creating with Muse
+              </Link>
+            </div>
+          </Card>
+        </section>
+      </main>
+    );
+  }
+
   return (
-    <main className="relative z-0  flex min-h-[95vh] w-[90%] flex-col gap-4 overflow-hidden px-10 pl-12 pt-14 text-slate-950">
+    <main className={cn("relative z-0 mx-auto flex min-h-[95vh] w-full flex-col gap-4 overflow-x-clip text-foreground", isMobile ? "px-4 pt-8" : "w-[90%] px-10 pl-12 pt-14")}>
 
       {/* ── Hero ─────────────────────────────────────────── */}
-      <section className="relative overflow-hidden rounded-[35px] h-[30vh] bg-black/50 text-white">
+      <section className="relative min-h-[30vh] overflow-hidden rounded-[35px] bg-black/50 text-white">
 
         <ColorGradient color="#F06565" />
 
 
         {/* Background decoration */}
-        <div className="absolute inset-0 flex flex-col gap-4  px-8 py-10  md:px-12">
+        <div className="absolute inset-0 flex flex-col gap-4 px-5 py-8 sm:px-8 md:px-12">
 
           <section className="flex flex-col gap-2">
-            <h1 className={cn("flex flex-wrap items-center gap-3 text-5xl font-semibold text-white", nofex.className)}>
+            <h1 className={cn("flex flex-wrap items-center gap-3 text-4xl font-semibold text-white sm:text-5xl", nofex.className)}>
               <HatGlasses className="size-10" />  Agents
             </h1>
 
@@ -240,10 +373,10 @@ export default function AgentsPage() {
       </section>
 
       {/* ── Disclaimer ───────────────────────────────────── */}
-      <div className="flex items-start gap-2 rounded-2xl border border-gray-200 bg-gray-50 p-4">
+      <div className={cn("flex items-start gap-2 rounded-2xl border p-4", isDark ? "border-white/10 bg-white/5" : "border-border bg-muted/50")}>
         <Info className="mt-0.5 size-4 shrink-0" />
 
-        <p className="text-xs leading-5 text-gray-800">
+        <p className="text-xs leading-5 text-muted-foreground">
           Companies, brands, products, and platforms mentioned are
           for educational purposes only. None endorse, sponsor, partner with,
           or are affiliated with create-a-curriculum.vercel.app unless
@@ -309,9 +442,9 @@ export default function AgentsPage() {
 
 
         {/* -- Agents -- */}
-        <Carousel className="w-[80vw] mx-auto">
+        <Carousel className="mx-auto w-full">
           <CarouselContent className="w-full">
-            <CarouselItem className="basis-1/2  pl-4">
+            <CarouselItem className={isMobile ? "basis-full pl-4" : "basis-1/2 pl-4"}>
               <Card className="group relative border-2 h-90 overflow-hidden rounded-[45px] ring-1 ring-white/10">
                 <video
                   src="/showcaseVideos/Agents/muse.mp4"
@@ -323,11 +456,11 @@ export default function AgentsPage() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
 
-                <span className="absolute left-5 top-5 rounded-full bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-black backdrop-blur-md">
+                <span className="absolute left-5 top-5 rounded-full bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-white backdrop-blur-md">
                   AI Agent by Meta
                 </span>
 
-                <div className="absolute inset-x-5 bottom-5 flex items-center gap-3.5">
+                <div className="absolute inset-x-5 bottom-5 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:gap-3.5">
                   <Image
                     src="/AppIcons/muse.webp"
                     alt="Muse"
@@ -343,7 +476,7 @@ export default function AgentsPage() {
                   </div>
                   <Link
                     href="/agents/muse"
-                    className="ml-auto shrink-0 whitespace-nowrap rounded-full bg-rose-500 px-5 py-2 text-white hover:bg-rose-600"
+                    className="shrink-0 rounded-full bg-rose-500 px-5 py-2 text-white hover:bg-rose-600 sm:ml-auto sm:whitespace-nowrap"
                   >
                     Start Creating with Muse
                   </Link>
@@ -365,11 +498,11 @@ export default function AgentsPage() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
 
-                <span className="absolute left-5 top-5 rounded-full bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-black backdrop-blur-md">
+                <span className="absolute left-5 top-5 rounded-full bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-white backdrop-blur-md">
                   AI Agent by Meta
                 </span>
 
-                <div className="absolute inset-x-5 bottom-5 flex items-center gap-3.5">
+                <div className="absolute inset-x-5 bottom-5 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:gap-3.5">
                   <Image
                     src="/AppIcons/muse.webp"
                     alt="Muse"

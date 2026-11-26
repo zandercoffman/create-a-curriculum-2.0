@@ -1,4 +1,7 @@
 "use client"
+
+import { useMobile } from "@/lib/useMobile";
+import { useDarkMode } from "@/lib/useDarkMode";
 import Image from "next/image";
 import Link from "next/link";
 import { Sparkles } from "lucide-react";
@@ -280,6 +283,8 @@ function buildPrompt(f: CurriculumForm, learners: LearnerProfile[]): string {
 }
 
 export default function CreateCurriculumPage() {
+    const isMobile = useMobile();
+    const { isDark } = useDarkMode();
     const [form, setForm] = useState<CurriculumForm>(INITIAL_FORM);
     const [learners, setLearners] = useState<LearnerProfile[]>([]);
     const [copied, setCopied] = useState(false);
@@ -319,33 +324,31 @@ export default function CreateCurriculumPage() {
         .filter(Boolean)
         .join(" · ");
 
+    if (isMobile === null) {
+        return (
+            <div className="flex w-full items-center justify-center py-12">
+                <p className="text-sm font-semibold text-muted-foreground">
+                    Loading...
+                </p>
+            </div>
+        );
+    }
+
     return (
-        <div className="w-full mr-auto px-6 py-12">
-            <div className=" grid w-full max-w-5xl items-center gap-10 lg:grid-cols-2">
+        <div className={`w-full mr-auto ${isMobile ? "px-4 py-8" : "px-6 py-12"}`}>
+            <div className=" grid w-full max-w-5xl items-center gap-6 sm:gap-10 lg:grid-cols-2">
                 {/* Left — copy */}
                 <section className="flex flex-col items-start mr-auto gap-5">
-                    <span style={{
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: "0.5rem",
-                        borderRadius: "9999px",
-                        border: "1px solid #bfdbfe",
-                        backgroundColor: "#eff6ff",
-                        padding: "0.25rem 0.75rem",
-                        fontSize: "0.75rem",
-                        lineHeight: "1rem",
-                        fontWeight: 500,
-                        color: "#1d4ed8",
-                    }}>
+                    <span className={`inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-medium ${isDark ? "border-blue-500/30 bg-blue-500/10 text-blue-300" : "border-blue-200 bg-blue-50 text-blue-700"}`}>
                         <Sparkles size={14} />
                         Powered by Meta Muse
                     </span>
 
-                    <h1 className="text-4xl font-bold leading-tight tracking-tight">
+                    <h1 className="text-3xl font-bold leading-tight tracking-tight sm:text-4xl">
 
                         <span className="gradient-muse">Create a Curriculum</span>
                         <span className="mt-3 flex items-center gap-3">
-                            <span className="text-xl font-medium text-slate-500">with</span>
+                            <span className="text-xl font-medium text-muted-foreground">with</span>
                             <Image
                                 src="/AppIcons/MuseIconExportable1.png"
                                 alt="Muse"
@@ -356,7 +359,7 @@ export default function CreateCurriculumPage() {
                         </span>
                     </h1>
 
-                    <p className="max-w-lg text-base leading-relaxed text-slate-600">
+                    <p className="max-w-lg text-base leading-relaxed text-muted-foreground">
                         Skip the stress of planning from a blank page. Describe what you
                         want to teach, copy the prompt into Muse, and get a structured,
                         lesson-by-lesson curriculum in seconds.
@@ -375,7 +378,7 @@ export default function CreateCurriculumPage() {
                         onChange={update("title")}
                         placeholder="e.g. Personal Finance Basics for Teens"
                     />
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className={`grid gap-4 ${isMobile ? "grid-cols-1" : "grid-cols-2"}`}>
                         <SelectField
                             id="curriculum-subject"
                             label="Subject area"
@@ -416,7 +419,7 @@ export default function CreateCurriculumPage() {
                             onChange={update("learnerIds")}
                         />
                     ) : (
-                        <p className="text-sm leading-relaxed text-slate-600">
+                        <p className="text-sm leading-relaxed text-muted-foreground">
                             No saved learners yet.{" "}
                             <Link href="/learners" className="font-medium text-blue-600 underline">
                                 Add learners
@@ -432,7 +435,7 @@ export default function CreateCurriculumPage() {
                         onChange={update("learnerWho")}
                         placeholder="e.g. 28 high school students, mixed ability levels"
                     />
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className={`grid gap-4 ${isMobile ? "grid-cols-1" : "grid-cols-2"}`}>
                         <SelectField
                             id="learner-prior"
                             label="Prior knowledge"
@@ -458,7 +461,7 @@ export default function CreateCurriculumPage() {
                     />
                 </OptionSection>
                 <OptionSection title="Lesson Description">
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className={`grid gap-4 ${isMobile ? "grid-cols-1" : "grid-cols-2"}`}>
                         <SelectField
                             id="lesson-format"
                             label="Lesson format"
@@ -475,7 +478,7 @@ export default function CreateCurriculumPage() {
                         />
                     </div>
                     <Field label="Every lesson includes">
-                        <div className="space-y-2.5 rounded-lg border border-slate-200 px-3 py-3">
+                        <div className="space-y-2.5 rounded-lg border border-border px-3 py-3">
                             <CheckRow
                                 id="struct-hook"
                                 label="Hook / warm-up"
@@ -534,7 +537,7 @@ export default function CreateCurriculumPage() {
                         options={AGENT_ROLES}
                     />
                     <Field label="What the agent may do">
-                        <div className="space-y-2.5 rounded-lg border border-slate-200 px-3 py-3">
+                        <div className="space-y-2.5 rounded-lg border border-border px-3 py-3">
                             <CheckRow
                                 id="agent-scroll"
                                 label="Scroll through shopping sites"
@@ -628,7 +631,7 @@ export default function CreateCurriculumPage() {
                         onChange={update("materials")}
                         placeholder="e.g. Chromebooks (1:1), projector, printed worksheets"
                     />
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className={`grid gap-4 ${isMobile ? "grid-cols-1" : "grid-cols-2"}`}>
                         <SelectField
                             id="other-assessment"
                             label="Assessment preference"
@@ -666,7 +669,7 @@ export default function CreateCurriculumPage() {
                         />
                     </Field>
                     <Field label="After Muse generates it">
-                        <div className="space-y-2.5 rounded-lg border border-slate-200 px-3 py-3">
+                        <div className="space-y-2.5 rounded-lg border border-border px-3 py-3">
                             <CheckRow
                                 id="export-artifact"
                                 label="Save as file artifact"
@@ -690,7 +693,7 @@ export default function CreateCurriculumPage() {
                             />
                         </div>
                     </Field>
-                    <p className="text-xs leading-relaxed text-slate-500">
+                    <p className="text-xs leading-relaxed text-muted-foreground">
                         These tell Muse what to produce. The finished file
                         itself is created when you paste Muse&apos;s answer
                         back below and save it here.

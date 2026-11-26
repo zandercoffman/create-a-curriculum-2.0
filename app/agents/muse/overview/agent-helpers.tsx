@@ -1,5 +1,8 @@
 "use client";
 
+import { useMobile } from "@/lib/useMobile";
+import { useDarkMode } from "@/lib/useDarkMode";
+
 import {
     Collapsible,
     CollapsibleContent,
@@ -72,13 +75,15 @@ export function OptionSection({
     title: string;
     children: ReactNode;
 }) {
+    const { isDark } = useDarkMode();
+
     return (
-        <Collapsible className="w-full rounded-xl border border-slate-200">
-            <CollapsibleTrigger className="flex w-full items-center justify-between px-4 py-3 text-left text-sm font-semibold text-slate-800 hover:bg-slate-50">
+        <Collapsible className={`w-full rounded-xl border ${isDark ? "border-white/10" : "border-border"}`}>
+            <CollapsibleTrigger className={`flex w-full items-center justify-between px-4 py-3 text-left text-sm font-semibold ${isDark ? "text-white hover:bg-white/5" : "text-foreground hover:bg-accent"}`}>
                 {title}
-                <ChevronDownIcon className="text-slate-500 transition-transform group-data-[panel-open]:rotate-180 [[data-panel-open]>&]:rotate-180" />
+                <ChevronDownIcon className="text-muted-foreground transition-transform group-data-[panel-open]:rotate-180 [[data-panel-open]>&]:rotate-180" />
             </CollapsibleTrigger>
-            <CollapsibleContent className="border-t border-slate-200 px-4 py-3 text-sm leading-relaxed text-slate-600">
+            <CollapsibleContent className="border-t border-border px-4 py-3 text-sm leading-relaxed text-muted-foreground">
                 <div className="space-y-4">{children}</div>
             </CollapsibleContent>
         </Collapsible>
@@ -87,14 +92,10 @@ export function OptionSection({
 
 /** The 3-column grid the original page lays its sections out in. */
 export function SectionsGrid({ children }: { children: ReactNode }) {
+    const isMobile = useMobile();
+
     return (
-        <section
-            className="mx-auto mt-4 w-[75vw]  gap-3 pt-10"
-            style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
-            }}
-        >
+        <section className={`mx-auto mt-4 grid w-full gap-3 pt-6 sm:pt-10 ${isMobile ? "grid-cols-1" : "grid-cols-1 md:grid-cols-2 xl:grid-cols-3"}`}>
             {children}
         </section>
     );
@@ -153,7 +154,7 @@ export function Field({
             <Label htmlFor={htmlFor}>{label}</Label>
             {children}
             {hint ? (
-                <p className="text-xs leading-relaxed text-slate-500">{hint}</p>
+                <p className="text-xs leading-relaxed text-muted-foreground">{hint}</p>
             ) : null}
         </div>
     );
@@ -277,7 +278,7 @@ export function CheckRow({
                 <Label htmlFor={id} className="text-sm font-normal leading-snug">
                     {label}
                 </Label>
-                {hint ? <p className="text-xs text-slate-500">{hint}</p> : null}
+                {hint ? <p className="text-xs text-muted-foreground">{hint}</p> : null}
             </div>
         </div>
     );
@@ -298,7 +299,7 @@ export function RadioRow({
         <RadioGroup
             value={value}
             onValueChange={onChange}
-            className="space-y-2.5 rounded-lg border border-slate-200 px-3 py-3"
+            className="space-y-2.5 rounded-lg border border-border px-3 py-3"
         >
             {options.map((o) => (
                 <div key={o.value} className="flex items-start gap-2.5">
@@ -315,7 +316,7 @@ export function RadioRow({
                             {o.label}
                         </Label>
                         {o.hint ? (
-                            <p className="text-xs text-slate-500">{o.hint}</p>
+                            <p className="text-xs text-muted-foreground">{o.hint}</p>
                         ) : null}
                     </div>
                 </div>
@@ -346,7 +347,7 @@ export function LearnerPicker({
 
     return (
         <Field label="Saved learners">
-            <div className="space-y-2.5 rounded-lg border border-slate-200 px-3 py-3">
+            <div className="space-y-2.5 rounded-lg border border-border px-3 py-3">
                 {learners.map((learner) => (
                     <CheckRow
                         key={learner.id}
@@ -695,12 +696,12 @@ export function AgentCurriculumPasteBackSection({
     };
 
     return (
-        <div className="mx-auto mt-6 w-[75vw] space-y-3">
-            <div className="w-full rounded-xl border border-slate-200">
-                <div className="flex w-full items-center justify-between px-4 py-3 text-left text-sm font-semibold text-slate-800">
+        <div className="mx-auto mt-6 w-full space-y-3">
+            <div className="w-full rounded-xl border border-border">
+                <div className="flex w-full items-center justify-between px-4 py-3 text-left text-sm font-semibold text-foreground">
                     Paste the results
                 </div>
-                <div className="space-y-3 border-t border-slate-200 px-4 py-3 text-sm leading-relaxed text-slate-600">
+                <div className="space-y-3 border-t border-border px-4 py-3 text-sm leading-relaxed text-muted-foreground">
                     <Textarea
                         value={pasted}
                         onChange={(e) => setPasted(e.target.value)}
@@ -726,7 +727,7 @@ export function AgentCurriculumPasteBackSection({
                             </p>
                         ) : null}
                     </div>
-                    <p className="text-xs leading-relaxed text-slate-500">
+                    <p className="text-xs leading-relaxed text-muted-foreground">
                         Paste Muse&apos;s JSON reply here. It stays on your
                         device, saved under “agentCurriculums”.
                     </p>
@@ -734,23 +735,23 @@ export function AgentCurriculumPasteBackSection({
             </div>
 
             {items.length > 0 ? (
-                <div className="w-full rounded-xl border border-slate-200">
-                    <div className="flex w-full items-center justify-between px-4 py-3 text-left text-sm font-semibold text-slate-800">
+                <div className="w-full rounded-xl border border-border">
+                    <div className="flex w-full items-center justify-between px-4 py-3 text-left text-sm font-semibold text-foreground">
                         Saved on this device ({items.length})
                     </div>
-                    <ul className="divide-y divide-slate-200 border-t border-slate-200">
+                    <ul className="divide-y divide-border border-t border-border">
                         {items.map((item, index) => (
                             <li key={`${item.name}-${index}`} className="px-4 py-3">
                                 <details>
-                                    <summary className="cursor-pointer text-sm font-semibold text-slate-800">
+                                    <summary className="cursor-pointer text-sm font-semibold text-foreground">
                                         {item.name}
                                         {detail ? (
-                                            <span className="ml-2 font-normal text-xs text-slate-500">
+                                            <span className="ml-2 font-normal text-xs text-muted-foreground">
                                                 {detail}
                                             </span>
                                         ) : null}
                                     </summary>
-                                    <pre className="mt-3 max-h-96 overflow-auto rounded-lg bg-slate-50 p-3 font-mono text-xs leading-relaxed whitespace-pre-wrap text-slate-700">
+                                    <pre className="mt-3 max-h-96 overflow-auto rounded-lg bg-muted p-3 font-mono text-xs leading-relaxed whitespace-pre-wrap text-foreground">
                                         {item.curriculum}
                                     </pre>
                                     <div className="mt-2 flex gap-2">
@@ -848,12 +849,12 @@ export function PasteBackSection({
     };
 
     return (
-        <div className="mx-auto mt-6 w-[75vw] space-y-3">
-            <div className="w-full rounded-xl border border-slate-200">
-                <div className="flex w-full items-center justify-between px-4 py-3 text-left text-sm font-semibold text-slate-800">
+        <div className="mx-auto mt-6 w-full space-y-3">
+            <div className="w-full rounded-xl border border-border">
+                <div className="flex w-full items-center justify-between px-4 py-3 text-left text-sm font-semibold text-foreground">
                     Paste the results
                 </div>
-                <div className="space-y-3 border-t border-slate-200 px-4 py-3 text-sm leading-relaxed text-slate-600">
+                <div className="space-y-3 border-t border-border px-4 py-3 text-sm leading-relaxed text-muted-foreground">
                     <Textarea
                         value={pasted}
                         onChange={(e) => setPasted(e.target.value)}
@@ -879,7 +880,7 @@ export function PasteBackSection({
                             </p>
                         ) : null}
                     </div>
-                    <p className="text-xs leading-relaxed text-slate-500">
+                    <p className="text-xs leading-relaxed text-muted-foreground">
                         Paste Muse&apos;s full reply here. It stays on your
                         device.
                     </p>
@@ -887,23 +888,23 @@ export function PasteBackSection({
             </div>
 
             {items.length > 0 ? (
-                <div className="w-full rounded-xl border border-slate-200">
-                    <div className="flex w-full items-center justify-between px-4 py-3 text-left text-sm font-semibold text-slate-800">
+                <div className="w-full rounded-xl border border-border">
+                    <div className="flex w-full items-center justify-between px-4 py-3 text-left text-sm font-semibold text-foreground">
                         Saved on this device ({items.length})
                     </div>
-                    <ul className="divide-y divide-slate-200 border-t border-slate-200">
+                    <ul className="divide-y divide-border border-t border-border">
                         {items.map((item) => (
                             <li key={item.id} className="px-4 py-3">
                                 <details>
-                                    <summary className="cursor-pointer text-sm font-semibold text-slate-800">
+                                    <summary className="cursor-pointer text-sm font-semibold text-foreground">
                                         {item.name}
                                         {item.detail ? (
-                                            <span className="ml-2 font-normal text-xs text-slate-500">
+                                            <span className="ml-2 font-normal text-xs text-muted-foreground">
                                                 {item.detail}
                                             </span>
                                         ) : null}
                                     </summary>
-                                    <pre className="mt-3 max-h-96 overflow-auto rounded-lg bg-slate-50 p-3 font-mono text-xs leading-relaxed whitespace-pre-wrap text-slate-700">
+                                    <pre className="mt-3 max-h-96 overflow-auto rounded-lg bg-muted p-3 font-mono text-xs leading-relaxed whitespace-pre-wrap text-foreground">
                                         {item.body}
                                     </pre>
                                     <div className="mt-2 flex gap-2">
